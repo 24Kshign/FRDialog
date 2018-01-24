@@ -13,7 +13,7 @@ import cn.jake.share.frdialog.util.StringUtil;
  * Created by jack on 2018/1/22
  */
 
-public class FRDialogViewHelper {
+class FRDialogViewHelper {
 
     private View mContentView;
 
