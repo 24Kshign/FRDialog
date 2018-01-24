@@ -18,9 +18,9 @@ import cn.jake.share.frdialog.R;
 
 public class FRDialog extends Dialog {
 
-    public FRDialogController controller;
+    FRDialogController controller;
 
-    public FRDialog(@NonNull Context context, int themeResId) {
+    FRDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
         controller = new FRDialogController(this, getWindow());
     }
@@ -49,7 +49,6 @@ public class FRDialog extends Dialog {
 
         FRDialogController.FRDialogParams params;
         MDBuilder mdBuilder;
-        CommonBuilder commonBuilder;
 
         public Builder(Context context) {
             this(context, R.style.dialog);
@@ -59,14 +58,38 @@ public class FRDialog extends Dialog {
             params = new FRDialogController.FRDialogParams(context, themeResId);
         }
 
-        public MDBuilder setMdBuilder() {
+        //设置dialog为materialDesign（布局确定，简单的MD效果）
+        public MDBuilder materialDesign() {
             mdBuilder = new MDBuilder(params, this);
+            params.mIsMaterialDesign = true;
+            params.mLayoutRes = R.layout.dialog_material;
             return mdBuilder;
         }
 
-        public CommonBuilder setCommonBuilder() {
-            commonBuilder = new CommonBuilder(params, this);
-            return commonBuilder;
+        //设置dialog布局文件
+        public Builder setContentView(@LayoutRes int layoutRes) {
+            params.mLayoutRes = layoutRes;
+            params.mContentView = null;
+            return this;
+        }
+
+        //设置dialog布局
+        public Builder setContentView(View view) {
+            params.mLayoutRes = 0;
+            params.mContentView = view;
+            return this;
+        }
+
+        //设置文字（dialog上任何一个控件）
+        public Builder setText(int id, CharSequence charSequence) {
+            params.mTextArray.put(id, charSequence);
+            return this;
+        }
+
+        //设置点击事件（dialog上任何一个控件）
+        public Builder setOnClickListener(int id, View.OnClickListener onClickListener) {
+            params.mClickListenerArray.put(id, onClickListener);
+            return this;
         }
 
         //设置dialog宽度全屏
@@ -123,111 +146,33 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class CommonBuilder {
-        FRDialogController.FRDialogParams params;
-        Builder builder;
-
-        public CommonBuilder(FRDialogController.FRDialogParams params, Builder builder) {
-            this.params = params;
-            this.builder = builder;
-        }
-
-        //设置dialog布局文件
-        public CommonBuilder setContentView(@LayoutRes int layoutRes) {
-            params.mLayoutRes = layoutRes;
-            params.mContentView = null;
-            return this;
-        }
-
-        //设置dialog布局
-        public CommonBuilder setContentView(View view) {
-            params.mLayoutRes = 0;
-            params.mContentView = view;
-            return this;
-        }
-
-        //设置文字（dialog上任何一个控件）
-        public CommonBuilder setText(int id, CharSequence charSequence) {
-            params.mTextArray.put(id, charSequence);
-            return this;
-        }
-
-        //设置点击事件（dialog上任何一个控件）
-        public CommonBuilder setOnClickListener(int id, View.OnClickListener onClickListener) {
-            params.mClickListenerArray.put(id, onClickListener);
-            return this;
-        }
-
-        //设置dialog宽度全屏
-        public CommonBuilder setFullWidth() {
-            params.mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
-            return this;
-        }
-
-        //设置dialog宽高
-        public CommonBuilder setWidthAndHeight(int width, int height) {
-            params.mWidth = width;
-            params.mHeight = height;
-            return this;
-        }
-
-        //设置dialog从底部弹出
-        public CommonBuilder setFromBottom(boolean isAnimation) {
-            if (isAnimation) {
-                params.mAnimation = R.style.dialog_from_bottom_anim;
-            }
-            params.mGravity = Gravity.BOTTOM;
-            return this;
-        }
-
-        //设置dialog默认动画
-        public CommonBuilder setDefaultAnim() {
-            params.mAnimation = R.style.default_dialog_anim;
-            return this;
-        }
-
-        //设置dialog其他动画
-        public CommonBuilder setAnimation(int animation) {
-            params.mAnimation = animation;
-            return this;
-        }
-
-        public FRDialog show() {
-            return builder.show();
-        }
-    }
-
+    /**
+     * MD模式的Builder，只用来设置MD模式
+     */
     public static class MDBuilder {
 
         FRDialogController.FRDialogParams params;
         Builder builder;
 
-        public MDBuilder(FRDialogController.FRDialogParams params, Builder builder) {
+        MDBuilder(FRDialogController.FRDialogParams params, Builder builder) {
             this.params = params;
             this.builder = builder;
         }
 
-        //设置dialog为materialDesign（布局确定，简单的MD效果）
-        public MDBuilder setMaterialDesign() {
-            params.mIsMaterialDesign = true;
-            params.mLayoutRes = R.layout.dialog_material;
-            return this;
-        }
-
         //设置MD效果dialog的头部
-        public MDBuilder setMaterialDesignTitle(CharSequence charSequence) {
+        public MDBuilder setTitle(CharSequence charSequence) {
             params.mMaterialDesignTitle = charSequence;
             return this;
         }
 
         //设置MD效果dialog内容
-        public MDBuilder setMaterialDesignContent(CharSequence charSequence) {
+        public MDBuilder setMessage(CharSequence charSequence) {
             params.mMaterialDesignContent = charSequence;
             return this;
         }
 
         //设置MD效果dialog取消和确认键文字
-        public MDBuilder setMaterialDesignNegativeAndPositive(CharSequence... charSequence) {
+        public MDBuilder setNegativeAndPositive(CharSequence... charSequence) {
             if (charSequence.length > 0) {
                 params.mNegativeContent = charSequence[0];
             }
@@ -237,8 +182,8 @@ public class FRDialog extends Dialog {
             return this;
         }
 
-        ////设置MD效果dialog取消和确认键文字颜色
-        public MDBuilder setMaterialDesignNegativeAndPositiveTextColor(Integer... colors) {
+        //设置MD效果dialog取消和确认键文字颜色
+        public MDBuilder setNegativeAndPositiveTextColor(Integer... colors) {
             if (colors.length > 0) {
                 params.mNegativeTextColor = colors[0];
             }
@@ -249,13 +194,13 @@ public class FRDialog extends Dialog {
         }
 
         //设置MD效果dialog确认键点击事件
-        public MDBuilder setMaterialDesignPositiveListener(View.OnClickListener onClickListener) {
+        public MDBuilder setPositiveListener(View.OnClickListener onClickListener) {
             params.mPositiveListener = onClickListener;
             return this;
         }
 
         //设置MD效果dialog取消键点击事件（默认不设置的效果为弹窗消失）
-        public MDBuilder setMaterialDesignNegativeListener(View.OnClickListener onClickListener) {
+        public MDBuilder setNegativeListener(View.OnClickListener onClickListener) {
             params.mNegativeListener = onClickListener;
             return this;
         }

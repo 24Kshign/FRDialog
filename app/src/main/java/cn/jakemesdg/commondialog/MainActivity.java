@@ -49,7 +49,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void showFromBottomDialog() {
         final FRDialog dialog = new FRDialog.Builder(this)
-                .setCommonBuilder()
                 .setContentView(R.layout.dialog_from_bottom)
                 .setFullWidth()
                 .setFromBottom(true)
@@ -76,12 +75,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void showMDDialog() {
         FRDialog dialog = new FRDialog.Builder(this)
-                .setMdBuilder().setMaterialDesign()
-                .setMaterialDesignTitle("温馨提示")
-                .setMaterialDesignContent("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
-                .setMaterialDesignNegativeAndPositive("取消", "确定")
+                .materialDesign()
+                .setTitle("温馨提示")
+                .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
+                .setNegativeAndPositive("取消", "确定")
                 .setDefaultAnim()
-                .setMaterialDesignPositiveListener(new View.OnClickListener() {
+                .setPositiveListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(MainActivity.this, "点击了确定", Toast.LENGTH_SHORT).show();
@@ -91,7 +90,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void showCommonDialog() {
         final FRDialog dialog = new FRDialog.Builder(this)
-                .setCommonBuilder()
                 .setContentView(R.layout.dialog_common)
                 .setText(R.id.dcu_tv_cancel, "否")
                 .setText(R.id.dcu_tv_confirm, "是")
