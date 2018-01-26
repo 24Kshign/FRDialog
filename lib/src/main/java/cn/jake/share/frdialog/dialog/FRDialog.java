@@ -2,6 +2,7 @@ package cn.jake.share.frdialog.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -61,8 +62,6 @@ public class FRDialog extends Dialog {
         //设置dialog为materialDesign（布局确定，简单的MD效果）
         public MDBuilder materialDesign() {
             mdBuilder = new MDBuilder(params, this);
-            params.mIsMaterialDesign = true;
-            params.mLayoutRes = R.layout.dialog_material;
             return mdBuilder;
         }
 
@@ -126,14 +125,43 @@ public class FRDialog extends Dialog {
             return this;
         }
 
+        public Builder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+            params.mOnCancelListener = onCancelListener;
+            return this;
+        }
+
+        public Builder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+            params.mOnDismissListener = onDismissListener;
+            return this;
+        }
+
+        public Builder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
+            params.mOnKeyListener = onKeyListener;
+            return this;
+        }
+
+        public Builder setCancelable(boolean isCancelable) {
+            params.mCancelable = isCancelable;
+            return this;
+        }
+
+        public Builder setCancelableOutside(boolean isCancelableOutside) {
+            params.mCancelableOutside = isCancelableOutside;
+            return this;
+        }
+
         public FRDialog create() {
             FRDialog dialog = new FRDialog(params.mContext, params.mThemeResId);
             params.apply(dialog.controller);
             dialog.setCanceledOnTouchOutside(params.mCancelableOutside);
             dialog.setCancelable(params.mCancelable);
-            dialog.setOnCancelListener(params.mOnCancelListener);
-            dialog.setOnDismissListener(params.mOnDismissListener);
-            if (params.mOnKeyListener != null) {
+            if (null != params.mOnCancelListener) {
+                dialog.setOnCancelListener(params.mOnCancelListener);
+            }
+            if (null != params.mOnDismissListener) {
+                dialog.setOnDismissListener(params.mOnDismissListener);
+            }
+            if (null != params.mOnKeyListener) {
                 dialog.setOnKeyListener(params.mOnKeyListener);
             }
             return dialog;
@@ -150,13 +178,15 @@ public class FRDialog extends Dialog {
      * MD模式的Builder，只用来设置MD模式
      */
     public static class MDBuilder {
-
         FRDialogController.FRDialogParams params;
         Builder builder;
 
         MDBuilder(FRDialogController.FRDialogParams params, Builder builder) {
             this.params = params;
             this.builder = builder;
+            this.params.init();
+            this.params.mIsMaterialDesign = true;
+            this.params.mLayoutRes = R.layout.dialog_material;
         }
 
         //设置MD效果dialog的头部
@@ -211,22 +241,6 @@ public class FRDialog extends Dialog {
             return this;
         }
 
-        //设置dialog宽高
-        public MDBuilder setWidthAndHeight(int width, int height) {
-            params.mWidth = width;
-            params.mHeight = height;
-            return this;
-        }
-
-        //设置dialog从底部弹出
-        public MDBuilder setFromBottom(boolean isAnimation) {
-            if (isAnimation) {
-                params.mAnimation = R.style.dialog_from_bottom_anim;
-            }
-            params.mGravity = Gravity.BOTTOM;
-            return this;
-        }
-
         //设置dialog默认动画
         public MDBuilder setDefaultAnim() {
             params.mAnimation = R.style.default_dialog_anim;
@@ -236,6 +250,31 @@ public class FRDialog extends Dialog {
         //设置dialog其他动画
         public MDBuilder setAnimation(int animation) {
             params.mAnimation = animation;
+            return this;
+        }
+
+        public MDBuilder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+            params.mOnCancelListener = onCancelListener;
+            return this;
+        }
+
+        public MDBuilder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+            params.mOnDismissListener = onDismissListener;
+            return this;
+        }
+
+        public MDBuilder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
+            params.mOnKeyListener = onKeyListener;
+            return this;
+        }
+
+        public MDBuilder setCancelable(boolean isCancelable) {
+            params.mCancelable = isCancelable;
+            return this;
+        }
+
+        public MDBuilder setCancelableOutside(boolean isCancelableOutside) {
+            params.mCancelableOutside = isCancelableOutside;
             return this;
         }
 

@@ -1,8 +1,11 @@
 package cn.jakemesdg.commondialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import cn.jake.share.frdialog.dialog.FRDialog;
@@ -71,10 +74,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 dialog.dismiss();
             }
         });
+
+        new AlertDialog.Builder(this).setNegativeButton("", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
     }
 
     private void showMDDialog() {
         FRDialog dialog = new FRDialog.Builder(this)
+                .setContentView(R.layout.dialog_from_bottom)
+                .setFullWidth()
+                .setFromBottom(true)
                 .materialDesign()
                 .setTitle("温馨提示")
                 .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
@@ -86,6 +99,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         Toast.makeText(MainActivity.this, "点击了确定", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
+        dialog.setCancelable(false);
     }
 
     private void showCommonDialog() {
