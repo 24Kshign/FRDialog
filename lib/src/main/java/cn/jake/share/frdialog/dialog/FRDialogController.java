@@ -21,17 +21,17 @@ import cn.jake.share.frdialog.R;
 
 class FRDialogController {
 
-    private FRDialog MDialog;
+    private FRDialog mMDialog;
     private Window mWindow;
     private FRDialogViewHelper dialogViewHelper;
 
     public FRDialogController(FRDialog dialog, Window window) {
-        this.MDialog = dialog;
+        this.mMDialog = dialog;
         this.mWindow = window;
     }
 
     public FRDialog getDialog() {
-        return MDialog;
+        return mMDialog;
     }
 
     public Window getWindow() {
@@ -107,6 +107,23 @@ class FRDialogController {
             this.mThemeResId = themeResId;
         }
 
+        public void init() {
+            mCancelable = true;
+            mCancelableOutside = true;
+            mOnDismissListener = null;
+            mOnCancelListener = null;
+            mOnKeyListener = null;
+            mContentView = null;
+            mLayoutRes = 0;
+            mTextArray.clear();
+            mClickListenerArray.clear();
+            mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mAnimation = 0;
+            mGravity = Gravity.CENTER;
+        }
+
+        //绑定View
         public void apply(final FRDialogController controller) {
             FRDialogViewHelper dialogViewHelper = null;
 
@@ -182,7 +199,7 @@ class FRDialogController {
             if (mAnimation != 0) {
                 window.setWindowAnimations(mAnimation);
             }
-            window.setLayout(mWidth,mHeight);
+            window.setLayout(mWidth, mHeight);
         }
     }
 }
