@@ -3,7 +3,6 @@ package cn.jake.share.frdialog.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
@@ -280,6 +279,59 @@ public class FRDialog extends Dialog {
 
         public FRDialog show() {
             return builder.show();
+        }
+    }
+
+
+    //=============================================================params
+
+    public static class DialogParams {
+        public Context mContext;
+        public int mThemeResId;
+        //点击返回键是否dismiss
+        public boolean mCancelable = true;
+        //点击外部是否dismiss
+        public boolean mCancelableOutside = true;
+        //dialog监听事件
+        public DialogInterface.OnDismissListener mOnDismissListener;
+        public DialogInterface.OnCancelListener mOnCancelListener;
+        public DialogInterface.OnKeyListener mOnKeyListener;
+        //dialog宽度
+        public int mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
+        //dialog高度
+        public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+        //dialog动画
+        public int mAnimation;
+        //dialog位置
+        public int mGravity = Gravity.CENTER;
+        //布局和布局Id
+        public int mLayoutRes;
+        public View mContentView;
+
+        public DialogParams(Context context, int themeResId) {
+            this.mContext = context;
+            this.mThemeResId = themeResId;
+        }
+
+        public DialogParams(DialogParams params) {
+            this.mContext = params.mContext;
+            this.mThemeResId = params.mThemeResId;
+            reset(params);
+        }
+
+
+        public void reset(DialogParams p) {
+            mCancelable = p == null ? true : p.mCancelable;
+            mCancelableOutside = p == null ? true : p.mCancelableOutside;
+            mOnDismissListener = p == null ? null : p.mOnDismissListener;
+            mOnCancelListener = p == null ? null : p.mOnCancelListener;
+            mOnKeyListener = p == null ? null : p.mOnKeyListener;
+            mContentView = p == null ? null : p.mContentView;
+            mLayoutRes = p == null ? 0 : p.mLayoutRes;
+            mWidth = p == null ? ViewGroup.LayoutParams.WRAP_CONTENT : p.mWidth;
+            mHeight = p == null ? ViewGroup.LayoutParams.WRAP_CONTENT : p.mHeight;
+            mAnimation = p == null ? 0 : p.mAnimation;
+            mGravity = p == null ? Gravity.CENTER : p.mGravity;
         }
     }
 }
