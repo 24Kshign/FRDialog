@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.dialog.interfaces.DialogClickListener;
@@ -59,6 +58,7 @@ public class FRDialog extends Dialog {
         builder.onInitView(rootView, setupDialogLayoutParams);
         if (!delaySetContentView) {
             setContentView(rootView);
+            setUpWindow(getWindow());
         }
     }
 
@@ -71,14 +71,16 @@ public class FRDialog extends Dialog {
         }
         if (delaySetContentView) {
             setContentView(rootView);
+            setUpWindow(window);
             delaySetContentView = false;
         }
-        WindowManager.LayoutParams windowLP = window.getAttributes();
-        windowLP.width = mBuilder.mLayoutParamsWrapper.mWidth;
-        windowLP.height = mBuilder.mLayoutParamsWrapper.mHeight;
-        windowLP.windowAnimations = setupDialogLayoutParams.mAnimation;
-        windowLP.gravity = setupDialogLayoutParams.mGravity;
-        window.setAttributes(windowLP);
+    }
+
+    protected void setUpWindow(Window window) {
+        if (window == null || setupDialogLayoutParams == null) return;
+        window.setWindowAnimations(setupDialogLayoutParams.mAnimation);
+        window.setGravity(setupDialogLayoutParams.mGravity);
+        window.setLayout(setupDialogLayoutParams.mWidth, setupDialogLayoutParams.mHeight);
     }
 
     @Override

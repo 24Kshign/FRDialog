@@ -79,7 +79,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void showMDDialog() {
         FRDialog dialog = new FRDialog.MDBuilder(this)
                 .fullWidth()
-                .fromBottom()
                 .title("温馨提示")
                 .message("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
                 .negative("取消", new DialogClickListener() {
