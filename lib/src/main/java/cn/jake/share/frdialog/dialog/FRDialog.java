@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.dialog.interfaces.DialogClickListener;
@@ -78,9 +79,12 @@ public class FRDialog extends Dialog {
 
     protected void setUpWindow(Window window) {
         if (window == null || setupDialogLayoutParams == null) return;
-        window.setWindowAnimations(setupDialogLayoutParams.mAnimation);
-        window.setGravity(setupDialogLayoutParams.mGravity);
-        window.setLayout(setupDialogLayoutParams.mWidth, setupDialogLayoutParams.mHeight);
+        final WindowManager.LayoutParams attrs = window.getAttributes();
+        attrs.windowAnimations = setupDialogLayoutParams.mAnimation;
+        attrs.gravity = setupDialogLayoutParams.mGravity;
+        attrs.width = setupDialogLayoutParams.mWidth;
+        attrs.height = setupDialogLayoutParams.mHeight;
+        window.setAttributes(attrs);
     }
 
     @Override
