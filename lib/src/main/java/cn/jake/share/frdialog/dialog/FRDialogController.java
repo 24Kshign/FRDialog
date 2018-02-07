@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import cn.jake.share.frdialog.R;
@@ -66,33 +65,28 @@ class FRDialogController {
 
         public Context mContext;
         public int mThemeResId;
-        //点击返回键是否dismiss
-        public boolean mCancelable = true;
-        //点击外部是否dismiss
-        public boolean mCancelableOutside = true;
-        //dialog监听事件
+        public boolean mCancelable = true;  //点击返回键是否dismiss
+        public boolean mCancelableOutside = true;  //点击外部是否dismiss
+        /**
+         * dialog监听事件
+         */
         public DialogInterface.OnDismissListener mOnDismissListener;
         public DialogInterface.OnCancelListener mOnCancelListener;
         public DialogInterface.OnKeyListener mOnKeyListener;
-        //布局和布局Id
+        /**
+         * 布局和布局Id
+         */
         public int mLayoutRes;
         public View mContentView;
-        //文案
-        public SparseArray<CharSequence> mTextArray = new SparseArray<>();
-        //点击事件
-        public SparseArray<View.OnClickListener> mClickListenerArray = new SparseArray<>();
-        //dialog宽度
-        public int mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
-        //dialog高度
-        public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-        //dialog动画
-        public int mAnimation;
-        //dialog位置
-        public int mGravity = Gravity.CENTER;
+        public SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
+        public SparseArray<View.OnClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
+        public int mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;  //dialog宽度
+        public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;  //dialog高度
+        public int mAnimation; //dialog动画
+        public int mGravity = Gravity.CENTER;  //dialog位置
 
 
-        //是否是MaterialDesign
-        public boolean mIsMaterialDesign = false;
+        public boolean mIsMaterialDesign = false; //是否是MaterialDesign
         public CharSequence mNegativeContent;  //MD风格的取消按钮
         public CharSequence mPositiveContent;  //MD风格的确认按钮
         public CharSequence mMaterialDesignTitle;   //MD风格的标题
@@ -105,22 +99,6 @@ class FRDialogController {
         public FRDialogParams(Context context, int themeResId) {
             this.mContext = context;
             this.mThemeResId = themeResId;
-        }
-
-        public void init() {
-            mCancelable = true;
-            mCancelableOutside = true;
-            mOnDismissListener = null;
-            mOnCancelListener = null;
-            mOnKeyListener = null;
-            mContentView = null;
-            mLayoutRes = 0;
-            mTextArray.clear();
-            mClickListenerArray.clear();
-            mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-            mAnimation = 0;
-            mGravity = Gravity.CENTER;
         }
 
         //绑定View

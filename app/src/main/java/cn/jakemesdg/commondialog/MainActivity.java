@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import cn.jake.share.frdialog.dialog.FRDialog;
@@ -51,7 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void showFromBottomDialog() {
-        final FRDialog dialog = new FRDialog.Builder(this)
+        final FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_from_bottom)
                 .setFullWidth()
                 .setFromBottom(true)
@@ -84,26 +83,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void showMDDialog() {
-        FRDialog dialog = new FRDialog.Builder(this)
-                .setContentView(R.layout.dialog_from_bottom)
-                .setFullWidth()
-                .setFromBottom(true)
-                .materialDesign()
-                .setTitle("温馨提示")
+        FRDialog dialog = new FRDialog.MDBuilder(this)
                 .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
-                .setNegativeAndPositive("取消", "确定")
-                .setDefaultAnim()
+                .setTitle("温馨提示")
+                .setNegativeAndPositive("否","是")
                 .setPositiveListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(MainActivity.this, "点击了确定", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "点击了是", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
         dialog.setCancelable(false);
     }
 
     private void showCommonDialog() {
-        final FRDialog dialog = new FRDialog.Builder(this)
+        final FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_common)
                 .setText(R.id.dcu_tv_cancel, "否")
                 .setText(R.id.dcu_tv_confirm, "是")
