@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import cn.jake.share.frdialog.R;
+import cn.jake.share.frdialog.dialog.interfaces.DialogClickListener;
 
 
 /**
@@ -22,6 +23,8 @@ public class FRDialog extends Dialog {
 
     FRDialogBuilder mBuilder;
     View rootView;
+    private boolean delaySetContentView;
+    private DialogLayoutParams setupDialogLayoutParams;
 
     FRDialog(@NonNull Context context) {
         this(context, 0);
@@ -34,11 +37,14 @@ public class FRDialog extends Dialog {
     void attachBuilder(FRDialogBuilder builder) {
         mBuilder = builder;
         DialogLayoutParams p = builder.mLayoutParamsWrapper;
-        DialogLayoutParams setUpParams = builder.onGenerateDialogLayoutParams();
-        if (setUpParams != null) {
-            setUpParams.copy(p);
+        setupDialogLayoutParams = builder.onGenerateDialogLayoutParams();
+        if (setupDialogLayoutParams != null) {
+            setupDialogLayoutParams.copy(p);
         } else {
-            setUpParams = p;
+            setupDialogLayoutParams = p;
+        }
+        if (getWindow() == null) {
+            delaySetContentView = true;
         }
         builder.onAttachDialog(this);
         if (builder.mContentView == null) {
@@ -50,25 +56,38 @@ public class FRDialog extends Dialog {
         } else {
             rootView = builder.mContentView;
         }
-        builder.onInitView(rootView, setUpParams);
+        builder.onInitView(rootView, setupDialogLayoutParams);
+        if (!delaySetContentView) {
+            setContentView(rootView);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Window window = getWindow();
         if (window == null) {
             return;
         }
+        if (delaySetContentView) {
+            setContentView(rootView);
+            delaySetContentView = false;
+        }
         WindowManager.LayoutParams windowLP = window.getAttributes();
         windowLP.width = mBuilder.mLayoutParamsWrapper.mWidth;
+        windowLP.height = mBuilder.mLayoutParamsWrapper.mHeight;
+        windowLP.windowAnimations = setupDialogLayoutParams.mAnimation;
+        windowLP.gravity = setupDialogLayoutParams.mGravity;
         window.setAttributes(windowLP);
     }
 
     @Override
     public void show() {
         super.show();
+    }
+
+    public <V extends View> V getView(int viewId) {
+        return rootView == null ? null : (V) rootView.findViewById(viewId);
     }
 
     //=============================================================params
@@ -102,16 +121,52 @@ public class FRDialog extends Dialog {
 
     //=============================================================builder
 
+    public static class CommonBuilder extends FRBaseMessageDialogBuilder<CommonBuilder> {
+
+        public CommonBuilder(Context context) {
+            super(context);
+        }
+
+        public CommonBuilder(Context context, int themeId) {
+            super(context, themeId);
+        }
+
+        @Override
+        void onViewInit(@Nullable View view, @NonNull DialogLayoutParams params) {
+
+        }
+
+        @Nullable
+        @Override
+        DialogLayoutParams onGenerateDialogLayoutParams() {
+            return null;
+        }
+    }
 
     public static class MDBuilder extends FRBaseMessageDialogBuilder<MDBuilder> {
 
         public MDBuilder(Context context) {
             super(context);
+            contentViewInternal(R.layout.dialog_material);
         }
 
         public MDBuilder(Context context, int themeId) {
             super(context, themeId);
-            contentView(R.layout.dialog_material);
+            contentViewInternal(R.layout.dialog_material);
+        }
+
+        @Deprecated
+        @Override
+        public MDBuilder contentView(View contentView) {
+            //do nothing
+            return castReturn();
+        }
+
+        @Deprecated
+        @Override
+        public MDBuilder contentView(int contentViewID) {
+            //do nothing
+            return castReturn();
         }
 
         @Nullable
@@ -124,7 +179,6 @@ public class FRDialog extends Dialog {
         void onViewInit(@Nullable View view, @NonNull DialogLayoutParams params) {
 
         }
-
 
         //设置MD效果dialog的头部
         public MDBuilder title(CharSequence charSequence) {
@@ -140,35 +194,32 @@ public class FRDialog extends Dialog {
             return setText(R.id.dialog_material_tv_cancel, negativeText);
         }
 
-        public MDBuilder positiveText(CharSequence negativeText){
+        public MDBuilder positiveText(CharSequence negativeText) {
             return setText(R.id.dialog_material_tv_confirm, negativeText);
         }
 
-        public MDBuilder negativeTextColor(){
-
+        public MDBuilder negativeTextColor(int negativeColor) {
+            return setColor(R.id.dialog_material_tv_cancel, negativeColor);
         }
 
-        //设置MD效果dialog取消和确认键文字颜色
-        public MDBuilder setNegativeAndPositiveTextColor(Integer... colors) {
-            if (colors.length > 0) {
-                mParams.mNegativeTextColor = colors[0];
-            }
-            if (colors.length > 1) {
-                mParams.mPositiveTextColor = colors[1];
-            }
-            return this;
+        public MDBuilder positiveTextColor(int negativeColor) {
+            return setColor(R.id.dialog_material_tv_confirm, negativeColor);
         }
 
-        //设置MD效果dialog确认键点击事件
-        public MDBuilder setPositiveListener(View.OnClickListener onClickListener) {
-            mParams.mPositiveListener = onClickListener;
-            return this;
+        public MDBuilder negativeClick(DialogClickListener l) {
+            return addClick(R.id.dialog_material_tv_cancel, l);
         }
 
-        //设置MD效果dialog取消键点击事件（默认不设置的效果为弹窗消失）
-        public MDBuilder setNegativeListener(View.OnClickListener onClickListener) {
-            mParams.mNegativeListener = onClickListener;
-            return this;
+        public MDBuilder positiveClick(DialogClickListener l) {
+            return addClick(R.id.dialog_material_tv_cancel, l);
+        }
+
+        public MDBuilder negative(CharSequence text, DialogClickListener l) {
+            return setText(R.id.dialog_material_tv_cancel, text).addClick(R.id.dialog_material_tv_cancel, l);
+        }
+
+        public MDBuilder positive(CharSequence text, DialogClickListener l) {
+            return setText(R.id.dialog_material_tv_confirm, text).addClick(R.id.dialog_material_tv_confirm, l);
         }
     }
 

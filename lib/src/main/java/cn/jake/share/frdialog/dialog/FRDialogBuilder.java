@@ -52,6 +52,16 @@ public abstract class FRDialogBuilder<T extends FRDialogBuilder> {
         return castReturn();
     }
 
+    protected T contentViewInternal(int contentViewID) {
+        this.mContentViewResid = contentViewID;
+        return castReturn();
+    }
+
+    protected T contentViewInternal(View contentView) {
+        this.mContentView = contentView;
+        return castReturn();
+    }
+
     public T fullWidth() {
         return width(ViewGroup.LayoutParams.MATCH_PARENT);
     }
@@ -123,6 +133,15 @@ public abstract class FRDialogBuilder<T extends FRDialogBuilder> {
             mFRDialog = new FRDialog(mContext, themeId);
         }
         mFRDialog.attachBuilder(this);
+        return mFRDialog;
+    }
+
+    public FRDialog show() {
+        if (mFRDialog != null) {
+            mFRDialog.show();
+        } else {
+            create().show();
+        }
         return mFRDialog;
     }
 

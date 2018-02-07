@@ -1,18 +1,20 @@
 package cn.jake.share.frdialog.dialog;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
+import cn.jake.share.frdialog.dialog.interfaces.DialogClickListener;
 import cn.jake.share.frdialog.util.StringUtil;
 
 /**
@@ -29,31 +31,30 @@ public abstract class FRBaseMessageDialogBuilder<T extends FRBaseMessageDialogBu
         super(context, themeId);
     }
 
-    T setText(@IdRes int viewId, @StringRes int text) {
+    public T setText(@IdRes int viewId, @StringRes int text) {
         return setText(viewId, StringUtil.getResString(mContext, text));
     }
 
-    T setText(@IdRes int viewId, @StringRes int text, Object... obj) {
+    public T setText(@IdRes int viewId, @StringRes int text, Object... obj) {
         return setText(viewId, StringUtil.getResString(mContext, text, obj));
     }
 
-
-    T setText(@IdRes int viewId, CharSequence text) {
+    public T setText(@IdRes int viewId, CharSequence text) {
         getViewWrapper(viewId).text = text;
         return castReturn();
     }
 
-    T setColorRes(@IdRes int viewId, @ColorRes int color) {
+    public T setColorRes(@IdRes int viewId, @ColorRes int color) {
         return setColor(viewId, mContext.getResources().getColor(color));
     }
 
-    T setColor(@IdRes int viewId, @ColorInt int color) {
+    public T setColor(@IdRes int viewId, @ColorInt int color) {
         getViewWrapper(viewId).color = color;
         return castReturn();
     }
 
-    T addClick(@IdRes int viewId, View.OnClickListener l) {
-        getViewWrapper(viewId).mOnClickListener = l;
+    public T addClick(@IdRes int viewId, DialogClickListener l) {
+        getViewWrapper(viewId).mDialogClickListener = l;
         return castReturn();
     }
 
@@ -78,11 +79,11 @@ public abstract class FRBaseMessageDialogBuilder<T extends FRBaseMessageDialogBu
 
     abstract void onViewInit(@Nullable View view, @NonNull FRDialog.DialogLayoutParams params);
 
-    private static class InnerViewWrapper implements Parcelable {
+    private class InnerViewWrapper implements Serializable {
         View v;
-        View.OnClickListener mOnClickListener;
+        DialogClickListener mDialogClickListener;
         CharSequence text;
-        int color;
+        int color = -1;
 
         public InnerViewWrapper() {
         }
@@ -92,38 +93,30 @@ public abstract class FRBaseMessageDialogBuilder<T extends FRBaseMessageDialogBu
                 v = contentView.findViewById(viewId);
             }
             if (v == null) return;
+            v.setVisibility(View.VISIBLE);
             if (v instanceof TextView) {
-                ((TextView) v).setTextColor(color);
-                ((TextView) v).setText(text);
+                if (color != -1) {
+                    ((TextView) v).setTextColor(color);
+                }
+                if (!TextUtils.isEmpty(text)) {
+                    ((TextView) v).setText(text);
+                }
             }
-            v.setOnClickListener(mOnClickListener);
-        }
-
-        protected InnerViewWrapper(Parcel in) {
-            color = in.readInt();
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(color);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<InnerViewWrapper> CREATOR = new Creator<InnerViewWrapper>() {
-            @Override
-            public InnerViewWrapper createFromParcel(Parcel in) {
-                return new InnerViewWrapper(in);
+            if (mDialogClickListener != null) {
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean dismiss = mFRDialog != null && mDialogClickListener.onClick(mFRDialog, v);
+                        if (dismiss) {
+                            mFRDialog.dismiss();
+                        }
+                    }
+                });
+            } else {
+                v.setOnClickListener(null);
             }
+        }
 
-            @Override
-            public InnerViewWrapper[] newArray(int size) {
-                return new InnerViewWrapper[size];
-            }
-        };
     }
 
 }
