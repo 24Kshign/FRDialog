@@ -26,10 +26,6 @@ public class FRDialog extends Dialog {
     private boolean delaySetContentView;
     private DialogLayoutParams setupDialogLayoutParams;
 
-    FRDialog(@NonNull Context context) {
-        this(context, 0);
-    }
-
     FRDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }

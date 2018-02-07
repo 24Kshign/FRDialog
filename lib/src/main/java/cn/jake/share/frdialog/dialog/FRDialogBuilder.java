@@ -33,7 +33,7 @@ public abstract class FRDialogBuilder<T extends FRDialogBuilder> {
     protected DialogInterface.OnKeyListener mOnKeyListener;
 
     public FRDialogBuilder(Context context) {
-        this(context, 0);
+        this(context, R.style.dialog);
     }
 
     public FRDialogBuilder(Context context, int themeId) {
