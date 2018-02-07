@@ -1,6 +1,8 @@
 package cn.jake.share.frdialog.util;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.widget.EditText;
 
 /**
@@ -37,6 +39,21 @@ public class StringUtil {
         } else {
             return editText.getText().toString().trim();
         }
+    }
+
+    /**
+     * 从资源文件拿到文字
+     */
+    public static String getResString(Context context, @StringRes int strId) {
+        return getResString(context, strId);
+    }
+
+    /**
+     * 从资源文件得到文字并format
+     */
+    public static String getResString(Context context, @StringRes int strId, Object... objs) {
+        if (strId == 0 || context == null) return null;
+        return context.getResources().getString(strId, objs);
     }
 
 }
