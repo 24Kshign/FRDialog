@@ -93,7 +93,7 @@ public abstract class FRDialogBuilder<T extends FRDialogBuilder> {
     }
 
     public T dontAnim() {
-        mLayoutParamsWrapper.mAnimation = -1;
+        mLayoutParamsWrapper.mAnimation = 0;
         //set to default
         mLayoutParamsWrapper.mGravity = Gravity.CENTER;
         return castReturn();

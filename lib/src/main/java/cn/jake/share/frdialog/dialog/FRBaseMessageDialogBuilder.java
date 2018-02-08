@@ -53,7 +53,7 @@ public abstract class FRBaseMessageDialogBuilder<T extends FRBaseMessageDialogBu
         return castReturn();
     }
 
-    public T addClick(@IdRes int viewId, DialogClickListener l) {
+    public T addClick(@IdRes int viewId, DialogClickListener<? extends T> l) {
         getViewWrapper(viewId).mDialogClickListener = l;
         return castReturn();
     }
@@ -106,7 +106,7 @@ public abstract class FRBaseMessageDialogBuilder<T extends FRBaseMessageDialogBu
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boolean dismiss = mFRDialog != null && mDialogClickListener.onClick(mFRDialog, v);
+                        boolean dismiss = mFRDialog != null && mDialogClickListener.onClick(mFRDialog, FRBaseMessageDialogBuilder.this, v);
                         if (dismiss) {
                             mFRDialog.dismiss();
                         }

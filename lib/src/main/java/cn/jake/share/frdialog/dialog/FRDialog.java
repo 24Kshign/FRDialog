@@ -3,13 +3,22 @@ package cn.jake.share.frdialog.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.dialog.interfaces.DialogClickListener;
@@ -145,7 +154,7 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class MDBuilder extends FRBaseMessageDialogBuilder<MDBuilder> {
+    public static class MDBuilder<B extends MDBuilder> extends FRBaseMessageDialogBuilder<B> {
 
         public MDBuilder(Context context) {
             super(context);
@@ -159,14 +168,14 @@ public class FRDialog extends Dialog {
 
         @Deprecated
         @Override
-        public MDBuilder contentView(View contentView) {
+        public B contentView(View contentView) {
             //do nothing
             return castReturn();
         }
 
         @Deprecated
         @Override
-        public MDBuilder contentView(int contentViewID) {
+        public B contentView(int contentViewID) {
             //do nothing
             return castReturn();
         }
@@ -183,45 +192,295 @@ public class FRDialog extends Dialog {
         }
 
         //设置MD效果dialog的头部
-        public MDBuilder title(CharSequence charSequence) {
-            return setText(R.id.dialog_material_tv_title, charSequence);
+        public B title(CharSequence charSequence) {
+            return (B) setText(R.id.dialog_material_tv_title, charSequence);
         }
 
         //设置MD效果dialog内容
-        public MDBuilder message(CharSequence charSequence) {
-            return setText(R.id.dialog_material_tv_content, charSequence);
+        public B message(CharSequence charSequence) {
+            return (B) setText(R.id.dialog_material_tv_content, charSequence);
         }
 
-        public MDBuilder negativeText(CharSequence negativeText) {
-            return setText(R.id.dialog_material_tv_cancel, negativeText);
+        public B negativeText(CharSequence negativeText) {
+            return (B) setText(R.id.dialog_material_tv_cancel, negativeText);
         }
 
-        public MDBuilder positiveText(CharSequence negativeText) {
-            return setText(R.id.dialog_material_tv_confirm, negativeText);
+        public B positiveText(CharSequence positiveText) {
+            return (B) setText(R.id.dialog_material_tv_confirm, positiveText);
         }
 
-        public MDBuilder negativeTextColor(int negativeColor) {
-            return setColor(R.id.dialog_material_tv_cancel, negativeColor);
+        public B negativeTextColor(int negativeColor) {
+            return (B) setColor(R.id.dialog_material_tv_cancel, negativeColor);
         }
 
-        public MDBuilder positiveTextColor(int negativeColor) {
-            return setColor(R.id.dialog_material_tv_confirm, negativeColor);
+        public B positiveTextColor(int positiveColor) {
+            return (B) setColor(R.id.dialog_material_tv_confirm, positiveColor);
         }
 
-        public MDBuilder negativeClick(DialogClickListener l) {
-            return addClick(R.id.dialog_material_tv_cancel, l);
+        public B negativeClick(DialogClickListener<B> l) {
+            return (B) addClick(R.id.dialog_material_tv_cancel, l);
         }
 
-        public MDBuilder positiveClick(DialogClickListener l) {
-            return addClick(R.id.dialog_material_tv_cancel, l);
+        public B positiveClick(DialogClickListener<B> l) {
+            return (B) addClick(R.id.dialog_material_tv_cancel, l);
         }
 
-        public MDBuilder negative(CharSequence text, DialogClickListener l) {
-            return setText(R.id.dialog_material_tv_cancel, text).addClick(R.id.dialog_material_tv_cancel, l);
+        public B negative(CharSequence text, DialogClickListener<? extends MDBuilder> l) {
+            return (B) setText(R.id.dialog_material_tv_cancel, text).addClick(R.id.dialog_material_tv_cancel, l);
         }
 
-        public MDBuilder positive(CharSequence text, DialogClickListener l) {
-            return setText(R.id.dialog_material_tv_confirm, text).addClick(R.id.dialog_material_tv_confirm, l);
+        public B positive(CharSequence text, DialogClickListener<? extends MDBuilder> l) {
+            return (B) setText(R.id.dialog_material_tv_confirm, text).addClick(R.id.dialog_material_tv_confirm, l);
+        }
+
+        @Override
+        B castReturn() {
+            return (B) super.castReturn();
+        }
+    }
+
+    public static class SelectedBuilder extends MDBuilder<SelectedBuilder> {
+        protected RecyclerView mRecyclerView;
+        protected List<SelectModelWrapper> descs;
+        protected int normalDrawableRes = R.drawable.ic_check_normal;
+        protected int checkedDrawableRes = R.drawable.ic_check_checked;
+        protected CheckMode mCheckMode = CheckMode.SINGLE;
+        protected OnCheckChangeListener mOnCheckChangeListener;
+        protected InnerAdapter mAdapter;
+
+        public enum CheckMode {
+            SINGLE,
+            NONE,
+            MULTI
+        }
+
+        public interface ISelect extends Serializable {
+            CharSequence getDesc();
+        }
+
+        protected class SelectModelWrapper implements ISelect {
+            protected CharSequence desc;
+            protected boolean checked;
+            protected ISelect target;
+
+            public SelectModelWrapper(CharSequence desc, boolean checked) {
+                this.desc = desc;
+                this.checked = checked;
+            }
+
+            public SelectModelWrapper(ISelect target) {
+                this(target, false);
+            }
+
+            public SelectModelWrapper(ISelect target, boolean checked) {
+                this.target = target;
+                this.checked = checked;
+            }
+
+            @Override
+            public CharSequence getDesc() {
+                return target == null ? desc : target.getDesc();
+            }
+        }
+
+
+        public SelectedBuilder(Context context) {
+            super(context);
+            contentViewInternal(R.layout.dialog_recyclerview);
+            descs = new ArrayList<>();
+        }
+
+        public SelectedBuilder(Context context, int themeId) {
+            super(context, themeId);
+            contentViewInternal(R.layout.dialog_recyclerview);
+            descs = new ArrayList<>();
+        }
+
+        @Override
+        SelectedBuilder castReturn() {
+            return (SelectedBuilder) super.castReturn();
+        }
+
+        @Deprecated
+        @Override
+        public SelectedBuilder contentView(View contentView) {
+            //do nothing
+            return castReturn();
+        }
+
+        @Deprecated
+        @Override
+        public SelectedBuilder contentView(int contentViewID) {
+            //do nothing
+            return castReturn();
+        }
+
+        @Override
+        void onInitView(@NonNull View contentView, @NonNull DialogLayoutParams params) {
+            super.onInitView(contentView, params);
+            if (mRecyclerView == null) {
+                mRecyclerView = contentView.findViewById(R.id.rv_content);
+                mRecyclerView.setItemAnimator(null);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+            }
+            if (mAdapter == null) {
+                mAdapter = new InnerAdapter();
+                mRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        void onViewInit(@Nullable View view, @NonNull DialogLayoutParams params) {
+
+        }
+
+        @Nullable
+        @Override
+        DialogLayoutParams onGenerateDialogLayoutParams() {
+            return null;
+        }
+
+        public SelectedBuilder normalCheckRes(@DrawableRes int res) {
+            normalDrawableRes = res;
+            return castReturn();
+        }
+
+        public SelectedBuilder checkRes(@DrawableRes int res) {
+            checkedDrawableRes = res;
+            return castReturn();
+        }
+
+        public SelectedBuilder addData(ISelect select) {
+            return addData(select, false);
+        }
+
+        public SelectedBuilder addData(ISelect select, boolean checked) {
+            descs.add(new SelectModelWrapper(select, checked));
+            return castReturn();
+        }
+
+        public SelectedBuilder addData(CharSequence desc) {
+            return addData(desc, false);
+        }
+
+        public SelectedBuilder addData(CharSequence desc, boolean checked) {
+            descs.add(new SelectModelWrapper(desc, checked));
+            return castReturn();
+        }
+
+        public SelectedBuilder addDatas(List<? extends ISelect> datas) {
+            if (datas != null) {
+                descs.clear();
+                for (ISelect data : datas) {
+                    addData(data);
+                }
+            }
+            return castReturn();
+        }
+
+        public SelectedBuilder addDatas(CharSequence... datas) {
+            for (CharSequence data : datas) {
+                addData(data);
+            }
+            return castReturn();
+        }
+
+        public SelectedBuilder checkMode(CheckMode mode) {
+            this.mCheckMode = mode;
+            return castReturn();
+        }
+
+        public SelectedBuilder checkListener(OnCheckChangeListener l) {
+            this.mOnCheckChangeListener = l;
+            return castReturn();
+        }
+
+        public List<ISelect> getSelectedDatas() {
+            List<ISelect> result = new ArrayList<>();
+            if (descs == null) return result;
+            for (SelectModelWrapper desc : descs) {
+                if (desc.checked) {
+                    result.add(desc.target == null ? desc : desc.target);
+                }
+            }
+            return result;
+        }
+
+        protected class InnerAdapter extends RecyclerView.Adapter<InnerViewHolder> {
+
+            @Override
+            public InnerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View itemView = parent.inflate(parent.getContext(), R.layout.item_select, null);
+                return new InnerViewHolder(itemView);
+            }
+
+            @Override
+            public void onBindViewHolder(InnerViewHolder holder, int position) {
+                holder.onBindData(position, descs.get(position));
+            }
+
+            @Override
+            public int getItemCount() {
+                return descs == null ? 0 : descs.size();
+            }
+
+        }
+
+        protected class InnerViewHolder extends RecyclerView.ViewHolder {
+            protected TextView desc;
+            protected ImageView check;
+
+            public InnerViewHolder(View itemView) {
+                super(itemView);
+                desc = itemView.findViewById(R.id.tv_desc);
+                check = itemView.findViewById(R.id.iv_check);
+                if (mCheckMode == CheckMode.NONE) check.setVisibility(View.GONE);
+            }
+
+            public void onBindData(final int position, final SelectModelWrapper data) {
+                if (data == null) return;
+                if (mCheckMode == CheckMode.NONE && check.getVisibility() != View.GONE) {
+                    check.setVisibility(View.GONE);
+                } else {
+                    if (check.getVisibility() != View.VISIBLE) check.setVisibility(View.VISIBLE);
+                }
+                desc.setText(data.getDesc());
+                check.setImageResource(data.checked ? checkedDrawableRes : normalDrawableRes);
+                check.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (mCheckMode) {
+                            case NONE:
+                            case SINGLE:
+                                for (SelectModelWrapper selectModelWrapper : descs) {
+                                    if (selectModelWrapper != data) {
+                                        selectModelWrapper.checked = false;
+                                    }
+                                }
+                                break;
+                        }
+                        onCheck(position, data, !data.checked);
+                        if (mOnCheckChangeListener != null) {
+                            mOnCheckChangeListener.onCheckChange(data.target == null ? data : data.target, position, data.checked);
+                        }
+                    }
+                });
+            }
+
+            void onCheck(int position, SelectModelWrapper data, boolean checked) {
+                if (data.checked != checked) {
+                    data.checked = checked;
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+        }
+
+        public interface OnCheckChangeListener {
+            void onCheckChange(ISelect select, int position, boolean checked);
         }
     }
 
