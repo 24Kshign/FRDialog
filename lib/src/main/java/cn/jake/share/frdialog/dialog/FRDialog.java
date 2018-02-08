@@ -442,8 +442,10 @@ public class FRDialog extends Dialog {
 
             public void onBindData(final int position, final SelectModelWrapper data) {
                 if (data == null) return;
-                if (mCheckMode == CheckMode.NONE && check.getVisibility() != View.GONE) {
-                    check.setVisibility(View.GONE);
+                if (mCheckMode == CheckMode.NONE) {
+                    if (check.getVisibility() != View.GONE) {
+                        check.setVisibility(View.GONE);
+                    }
                 } else {
                     if (check.getVisibility() != View.VISIBLE) check.setVisibility(View.VISIBLE);
                 }

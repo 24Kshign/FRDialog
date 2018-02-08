@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final FRDialog dialog = new FRDialog.SelectedBuilder(this)
                 .title("温馨提示")
                 .fromBottom()
-                .checkMode(FRDialog.SelectedBuilder.CheckMode.MULTI)
+                .checkMode(FRDialog.SelectedBuilder.CheckMode.NONE)
                 .message("这是recyclerView的dialog")
                 .addDatas("测试1", "测试2", "测试3", "测试4", "测试5", "测试6", "测试7", "测试8", "测试9", "测试10", "测试11", "测试12")
                 .negative("取消", new DialogClickListener<FRDialog.SelectedBuilder>() {
