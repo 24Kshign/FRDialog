@@ -451,25 +451,27 @@ public class FRDialog extends Dialog {
                 }
                 desc.setText(data.getDesc());
                 check.setImageResource(data.checked ? checkedDrawableRes : normalDrawableRes);
-                check.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switch (mCheckMode) {
-                            case NONE:
-                            case SINGLE:
-                                for (SelectModelWrapper selectModelWrapper : descs) {
-                                    if (selectModelWrapper != data) {
-                                        selectModelWrapper.checked = false;
+                if (mCheckMode != CheckMode.NONE) {
+                    check.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (mCheckMode) {
+                                case NONE:
+                                case SINGLE:
+                                    for (SelectModelWrapper selectModelWrapper : descs) {
+                                        if (selectModelWrapper != data) {
+                                            selectModelWrapper.checked = false;
+                                        }
                                     }
-                                }
-                                break;
+                                    break;
+                            }
+                            onCheck(position, data, !data.checked);
+                            if (mOnCheckChangeListener != null) {
+                                mOnCheckChangeListener.onCheckChange(data.target == null ? data : data.target, position, data.checked);
+                            }
                         }
-                        onCheck(position, data, !data.checked);
-                        if (mOnCheckChangeListener != null) {
-                            mOnCheckChangeListener.onCheckChange(data.target == null ? data : data.target, position, data.checked);
-                        }
-                    }
-                });
+                    });
+                }
             }
 
             void onCheck(int position, SelectModelWrapper data, boolean checked) {
