@@ -38,5 +38,4 @@ public class StringUtil {
             return editText.getText().toString().trim();
         }
     }
-
 }

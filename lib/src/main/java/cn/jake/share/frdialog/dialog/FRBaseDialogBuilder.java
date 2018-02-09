@@ -3,6 +3,7 @@ package cn.jake.share.frdialog.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 
 import cn.jake.share.frdialog.R;
@@ -13,7 +14,7 @@ import cn.jake.share.frdialog.R;
 
 public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
 
-    protected FRDialogController.FRDialogParams mParams;
+    FRDialogController.FRDialogParams mParams;
 
     public FRBaseDialogBuilder(Context context, int themeResId) {
         mParams = new FRDialogController.FRDialogParams(context, themeResId);
@@ -81,6 +82,10 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
     public T setCancelableOutside(boolean isCancelableOutside) {
         mParams.mCancelableOutside = isCancelableOutside;
         return (T) this;
+    }
+
+    public <VIEW extends View> VIEW getView(int viewId) {
+        return mParams.getView(viewId);
     }
 
     public FRDialog create() {

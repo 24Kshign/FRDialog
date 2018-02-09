@@ -42,6 +42,9 @@ public class FRDialog extends Dialog {
         controller.setMaterialDesignNegativeListener(R.id.dialog_material_tv_cancel, onClickListener);
     }
 
+    /**
+     * 普通模式的Builder
+     */
     public static class CommonBuilder extends FRBaseDialogBuilder<CommonBuilder> {
 
         public CommonBuilder(Context context) {

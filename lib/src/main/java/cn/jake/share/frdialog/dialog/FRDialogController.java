@@ -54,11 +54,11 @@ class FRDialogController {
     }
 
     public void setMaterialDesignPositiveListener(int id, View.OnClickListener onClickListener) {
-        dialogViewHelper.setOnClickListener(id, onClickListener);
+        setOnClickListener(id, onClickListener);
     }
 
     public void setMaterialDesignNegativeListener(int id, View.OnClickListener onClickListener) {
-        dialogViewHelper.setOnClickListener(id, onClickListener);
+        setOnClickListener(id, onClickListener);
     }
 
     static class FRDialogParams {
@@ -95,16 +95,19 @@ class FRDialogController {
         public View.OnClickListener mNegativeListener;  //MD风格取消按钮的点击事件
         public int mNegativeTextColor;   //MD风格确认按钮的颜色
         public int mPositiveTextColor;  //MD风格取消按钮的颜色
+        FRDialogViewHelper dialogViewHelper = null;
 
         public FRDialogParams(Context context, int themeResId) {
             this.mContext = context;
             this.mThemeResId = themeResId;
         }
 
-        //绑定View
-        public void apply(final FRDialogController controller) {
-            FRDialogViewHelper dialogViewHelper = null;
+        public <T extends View> T getView(int viewId) {
+            return dialogViewHelper.getView(viewId);
+        }
 
+        //绑定View，并设置dialog
+        public void apply(final FRDialogController controller) {
             if (mLayoutRes != 0) {
                 dialogViewHelper = new FRDialogViewHelper(LayoutInflater.from(mContext).inflate(mLayoutRes, null));
             }
