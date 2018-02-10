@@ -2,11 +2,16 @@ package cn.jake.share.frdialog.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 
 import cn.jake.share.frdialog.R;
+import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
+import cn.jake.share.frdialog.util.StringUtil;
 
 
 /**
@@ -15,36 +20,64 @@ import cn.jake.share.frdialog.R;
 
 public class FRDialog extends Dialog {
 
-    FRDialogController controller;
+    private FRDialogViewHelper dialogViewHelper;
 
     FRDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-        controller = new FRDialogController(this, getWindow());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     public <T extends View> T getView(int viewId) {
-        return controller.getView(viewId);
+        return dialogViewHelper.getView(viewId);
     }
 
     public void setText(int id, CharSequence charSequence) {
-        controller.setText(id, charSequence);
+        dialogViewHelper.setText(id, charSequence);
     }
 
-    public void setOnClickListener(int id, View.OnClickListener onClickListener) {
-        controller.setOnClickListener(id, onClickListener);
+    public void setOnClickListener(int id, FRDialogClickListener onClickListener) {
+        dialogViewHelper.setOnClickListener(id, onClickListener);
     }
 
-    public void setMaterialDesignPositiveListener(View.OnClickListener onClickListener) {
-        controller.setMaterialDesignPositiveListener(R.id.dialog_material_tv_confirm, onClickListener);
+    public <T extends FRBaseDialogBuilder> void attach(FRBaseDialogBuilder baseBuilder) {
+        if (null != baseBuilder.mContentView) {
+            dialogViewHelper = new FRDialogViewHelper(baseBuilder.mContentView);
+        }
+        if (null == dialogViewHelper) {
+            throw new IllegalArgumentException("the xml layout of dialog should not be null");
+        }
+        setContentView(dialogViewHelper.getContentView());
+        dialogViewHelper.setDialog(this);
+        setCanceledOnTouchOutside(baseBuilder.mCancelableOutside);
+        setCancelable(baseBuilder.mCancelable);
+        if (null != baseBuilder.mOnCancelListener) {
+            setOnCancelListener(baseBuilder.mOnCancelListener);
+        }
+        if (null != baseBuilder.mOnDismissListener) {
+            setOnDismissListener(baseBuilder.mOnDismissListener);
+        }
+        if (null != baseBuilder.mOnKeyListener) {
+            setOnKeyListener(baseBuilder.mOnKeyListener);
+        }
+
+        Window window = getWindow();
+        if (null != window) {
+            window.setGravity(baseBuilder.mGravity);
+            if (baseBuilder.mAnimation != 0) {
+                window.setWindowAnimations(baseBuilder.mAnimation);
+            }
+            window.setLayout(baseBuilder.mWidth, baseBuilder.mHeight);
+        }
     }
 
-    public void setMaterialDesignNegativeListener(View.OnClickListener onClickListener) {
-        controller.setMaterialDesignNegativeListener(R.id.dialog_material_tv_cancel, onClickListener);
+    public FRDialogViewHelper getDialogViewHelper() {
+        return dialogViewHelper;
     }
 
-    /**
-     * 普通模式的Builder
-     */
     public static class CommonBuilder extends FRBaseDialogBuilder<CommonBuilder> {
 
         public CommonBuilder(Context context) {
@@ -57,35 +90,23 @@ public class FRDialog extends Dialog {
 
         //设置dialog布局文件
         public CommonBuilder setContentView(@LayoutRes int layoutRes) {
-            mParams.mLayoutRes = layoutRes;
-            mParams.mContentView = null;
+            if (layoutRes != 0) {
+                setContentView(LayoutInflater.from(getContext()).inflate(layoutRes, null));
+            }
             return this;
         }
 
         //设置dialog布局
         public CommonBuilder setContentView(View view) {
-            mParams.mLayoutRes = 0;
-            mParams.mContentView = view;
-            return this;
-        }
-
-        //设置文字（dialog上任何一个控件）
-        public CommonBuilder setText(int id, CharSequence charSequence) {
-            mParams.mTextArray.put(id, charSequence);
-            return this;
-        }
-
-        //设置点击事件（dialog上任何一个控件）
-        public CommonBuilder setOnClickListener(int id, View.OnClickListener onClickListener) {
-            mParams.mClickListenerArray.put(id, onClickListener);
+            mContentView = view;
             return this;
         }
     }
 
-    /**
-     * MD模式的Builder，只用来设置MD模式
-     */
-    public static class MDBuilder extends FRBaseDialogBuilder<MDBuilder> {
+    public static class MDBuilder extends FRBaseDialogBuilder<FRDialog.MDBuilder> {
+
+        public CharSequence mNegativeContent;  //MD风格的取消按钮
+        public FRDialogClickListener mNegativeListener;  //MD风格取消按钮的点击事件
 
         public MDBuilder(Context context) {
             this(context, R.style.dialog);
@@ -93,29 +114,28 @@ public class FRDialog extends Dialog {
 
         public MDBuilder(Context context, int themeResId) {
             super(context, themeResId);
-            mParams.mLayoutRes = R.layout.dialog_material;
-            mParams.mIsMaterialDesign = true;
+            mContentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_material, null);
         }
 
         //设置MD效果dialog的头部
         public MDBuilder setTitle(CharSequence charSequence) {
-            mParams.mMaterialDesignTitle = charSequence;
+            mTextArray.put(R.id.dialog_material_tv_title, charSequence);
             return this;
         }
 
         //设置MD效果dialog内容
         public MDBuilder setMessage(CharSequence charSequence) {
-            mParams.mMaterialDesignContent = charSequence;
+            mTextArray.put(R.id.dialog_material_tv_content, charSequence);
             return this;
         }
 
         //设置MD效果dialog取消和确认键文字
         public MDBuilder setNegativeAndPositive(CharSequence... charSequence) {
             if (charSequence.length > 0) {
-                mParams.mNegativeContent = charSequence[0];
+                mNegativeContent = charSequence[0];
             }
             if (charSequence.length > 1) {
-                mParams.mPositiveContent = charSequence[1];
+                mTextArray.put(R.id.dialog_material_tv_confirm, charSequence[1]);
             }
             return this;
         }
@@ -123,24 +143,42 @@ public class FRDialog extends Dialog {
         //设置MD效果dialog取消和确认键文字颜色
         public MDBuilder setNegativeAndPositiveTextColor(Integer... colors) {
             if (colors.length > 0) {
-                mParams.mNegativeTextColor = colors[0];
+                mTextColorArray.put(R.id.dialog_material_tv_cancel, colors[0]);
             }
             if (colors.length > 1) {
-                mParams.mPositiveTextColor = colors[1];
+                mTextColorArray.put(R.id.dialog_material_tv_confirm, colors[1]);
             }
             return this;
         }
 
         //设置MD效果dialog确认键点击事件
-        public MDBuilder setPositiveListener(View.OnClickListener onClickListener) {
-            mParams.mPositiveListener = onClickListener;
+        public MDBuilder setPositiveListener(FRDialogClickListener onClickListener) {
+            mClickListenerArray.put(R.id.dialog_material_tv_confirm, onClickListener);
             return this;
         }
 
         //设置MD效果dialog取消键点击事件（默认不设置的效果为弹窗消失）
-        public MDBuilder setNegativeListener(View.OnClickListener onClickListener) {
-            mParams.mNegativeListener = onClickListener;
+        public MDBuilder setNegativeListener(FRDialogClickListener onClickListener) {
+            mNegativeListener = onClickListener;
             return this;
+        }
+
+        @Override
+        protected boolean attachView() {
+            if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent))) {
+                mTextArray.put(R.id.dialog_material_tv_cancel, mNegativeContent);
+                if (null != mNegativeListener) {
+                    mClickListenerArray.put(R.id.dialog_material_tv_cancel, mNegativeListener);
+                } else {
+                    getView(R.id.dialog_material_tv_cancel).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getDialog().dismiss();
+                        }
+                    });
+                }
+            }
+            return super.attachView();
         }
     }
 }

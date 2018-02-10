@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import cn.jake.share.frdialog.dialog.FRDialog;
+import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -51,24 +52,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_from_bottom)
                 .setFullWidth()
-                .setFromBottom(true)
+                .setFromBottom()
                 .show();
-        dialog.setOnClickListener(R.id.dfb_tv_take_photo, new View.OnClickListener() {
+
+        dialog.setOnClickListener(R.id.dfb_tv_take_photo, new FRDialogClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onDialogClick(View view) {
                 Toast.makeText(MainActivity.this, "点击了拍照", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
-        dialog.setOnClickListener(R.id.dfb_tv_gallery, new View.OnClickListener() {
+
+        dialog.setOnClickListener(R.id.dfb_tv_gallery, new FRDialogClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onDialogClick(View view) {
                 Toast.makeText(MainActivity.this, "点击了相册", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
-        dialog.setOnClickListener(R.id.dfb_tv_cancel, new View.OnClickListener() {
+
+        dialog.setOnClickListener(R.id.dfb_tv_cancel, new FRDialogClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            public boolean onDialogClick(View view) {
+                return true;
             }
         });
     }
@@ -77,14 +83,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         FRDialog dialog = new FRDialog.MDBuilder(this)
                 .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
                 .setTitle("温馨提示")
-                .setNegativeAndPositive("否","是")
-                .setPositiveListener(new View.OnClickListener() {
+                .setNegativeAndPositive("否", "是")
+                .setPositiveListener(new FRDialogClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Toast.makeText(MainActivity.this, "点击了是", Toast.LENGTH_SHORT).show();
+                    public boolean onDialogClick(View view) {
+                        return true;
                     }
                 }).show();
-        dialog.setCancelable(false);
     }
 
     private void showCommonDialog() {
@@ -97,17 +102,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setDefaultAnim()
                 .show();
 
-        dialog.setOnClickListener(R.id.dcu_tv_cancel, new View.OnClickListener() {
+        dialog.setOnClickListener(R.id.dcu_tv_cancel, new FRDialogClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            public boolean onDialogClick(View view) {
+                Toast.makeText(MainActivity.this, "点击了否", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
-        dialog.setOnClickListener(R.id.dcu_tv_confirm, new View.OnClickListener() {
+        dialog.setOnClickListener(R.id.dcu_tv_confirm, new FRDialogClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onDialogClick(View v) {
                 Toast.makeText(MainActivity.this, "点击了是", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
     }

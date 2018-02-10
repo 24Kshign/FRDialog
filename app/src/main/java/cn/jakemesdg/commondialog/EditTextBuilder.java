@@ -1,9 +1,6 @@
 package cn.jakemesdg.commondialog;
 
 import android.content.Context;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.EditText;
 
 import cn.jake.share.frdialog.dialog.FRBaseDialogBuilder;
 
@@ -17,11 +14,4 @@ public class EditTextBuilder extends FRBaseDialogBuilder<EditTextBuilder> {
         super(context, themeResId);
     }
 
-    public EditTextBuilder addTextWatch(int id, TextWatcher textWatcher) {
-        View view = getView(id);
-        if (view instanceof EditText) {
-            ((EditText) view).addTextChangedListener(textWatcher);
-        }
-        return this;
-    }
 }

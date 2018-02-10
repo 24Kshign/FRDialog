@@ -1,5 +1,6 @@
 package cn.jake.share.frdialog.dialog;
 
+import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
+import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.util.StringUtil;
 
 /**
@@ -20,6 +22,8 @@ class FRDialogViewHelper {
 
     private SparseArray<WeakReference<View>> mViews;
 
+    public FRDialog mDialog;
+
     public FRDialogViewHelper(View view) {
         this.mContentView = view;
         mViews = new SparseArray<>();
@@ -29,7 +33,11 @@ class FRDialogViewHelper {
         return mContentView;
     }
 
-    public <T extends View> T getView(int idRes) {
+    public void setDialog(FRDialog dialog) {
+        this.mDialog = dialog;
+    }
+
+    public <T extends View> T getView(@IdRes int idRes) {
         //防止多次findViewById
         WeakReference<View> viewWeakReference = mViews.get(idRes);
         View view = null;
@@ -45,17 +53,33 @@ class FRDialogViewHelper {
         return (T) view;
     }
 
-    public void setText(int id, CharSequence charSequence) {
-        TextView tv = getView(id);
-        if (null != tv) {
-            tv.setText(StringUtil.valueOf(charSequence));
+    public void setText(@IdRes int id, CharSequence charSequence) {
+        View view = getView(id);
+        if (view instanceof TextView) {
+            view.setVisibility(View.VISIBLE);
+            ((TextView) view).setText(StringUtil.valueOf(charSequence));
         }
     }
 
-    public void setOnClickListener(int id, View.OnClickListener onClickListener) {
+    public void setOnClickListener(@IdRes int id, final FRDialogClickListener dialogClickListener) {
         View view = getView(id);
-        if (null != view && null != onClickListener) {
-            view.setOnClickListener(onClickListener);
+        if (null != view && null != dialogClickListener) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean dismiss = dialogClickListener.onDialogClick(v);
+                    if (null != mDialog && dismiss) {
+                        mDialog.dismiss();
+                    }
+                }
+            });
+        }
+    }
+
+    public void setTextColor(@IdRes int id, int color) {
+        View view = getView(id);
+        if (view instanceof TextView) {
+            ((TextView) view).setTextColor(color);
         }
     }
 }
