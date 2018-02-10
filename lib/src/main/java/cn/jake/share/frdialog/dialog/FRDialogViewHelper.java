@@ -61,7 +61,14 @@ class FRDialogViewHelper {
         }
     }
 
-    public void setOnClickListener(@IdRes int id, final FRDialogClickListener dialogClickListener) {
+    public void setOnClickListener(@IdRes int id, final View.OnClickListener onClickListener) {
+        View view = getView(id);
+        if (null != view && null != onClickListener) {
+            view.setOnClickListener(onClickListener);
+        }
+    }
+
+    public void setOnDialogClickListener(@IdRes int id, final FRDialogClickListener dialogClickListener) {
         View view = getView(id);
         if (null != view && null != dialogClickListener) {
             view.setOnClickListener(new View.OnClickListener() {

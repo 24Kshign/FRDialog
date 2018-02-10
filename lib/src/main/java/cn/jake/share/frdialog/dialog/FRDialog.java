@@ -40,7 +40,7 @@ public class FRDialog extends Dialog {
     }
 
     public void setOnClickListener(int id, FRDialogClickListener onClickListener) {
-        dialogViewHelper.setOnClickListener(id, onClickListener);
+        dialogViewHelper.setOnDialogClickListener(id, onClickListener);
     }
 
     public <T extends FRBaseDialogBuilder> void attach(FRBaseDialogBuilder baseBuilder) {

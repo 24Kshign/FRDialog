@@ -163,7 +163,7 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
             mDialogViewHelper.setText(mTextArray.keyAt(i), mTextArray.valueAt(i));
         }
         for (int i = 0; i < mClickListenerArray.size(); i++) {
-            mDialogViewHelper.setOnClickListener(mClickListenerArray.keyAt(i), mClickListenerArray.valueAt(i));
+            mDialogViewHelper.setOnDialogClickListener(mClickListenerArray.keyAt(i), mClickListenerArray.valueAt(i));
         }
         for (int i = 0; i < mTextColorArray.size(); i++) {
             mDialogViewHelper.setTextColor(mTextColorArray.keyAt(i), mTextColorArray.valueAt(i));
