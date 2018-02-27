@@ -43,7 +43,7 @@ public class FRDialog extends Dialog {
         dialogViewHelper.setOnDialogClickListener(id, onClickListener);
     }
 
-    public <T extends FRBaseDialogBuilder> void attach(FRBaseDialogBuilder baseBuilder) {
+    public void attach(FRBaseDialogBuilder baseBuilder) {
         if (null != baseBuilder.mContentView) {
             dialogViewHelper = new FRDialogViewHelper(baseBuilder.mContentView);
         }
