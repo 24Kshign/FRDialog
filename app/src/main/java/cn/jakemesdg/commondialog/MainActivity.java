@@ -102,6 +102,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setDefaultAnim()
                 .show();
 
+        dialog.setText(R.id.dcu_tv_confirm, "确定");
+
         dialog.setOnClickListener(R.id.dcu_tv_cancel, new FRDialogClickListener() {
             @Override
             public boolean onDialogClick(View view) {
