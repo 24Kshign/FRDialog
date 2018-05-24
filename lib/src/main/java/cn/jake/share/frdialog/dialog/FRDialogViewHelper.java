@@ -3,12 +3,13 @@ package cn.jake.share.frdialog.dialog;
 import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
-
 
 import java.lang.ref.WeakReference;
 
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
+import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
 import cn.jake.share.frdialog.util.StringUtil;
 
 /**
@@ -87,6 +88,20 @@ class FRDialogViewHelper {
         View view = getView(id);
         if (view instanceof TextView) {
             ((TextView) view).setTextColor(color);
+        }
+    }
+
+    public void addTextChangedListener(@IdRes int id, FRDialogTextChangeListener frDialogTextChangeListener) {
+        View view = getView(id);
+        if (null != view && view instanceof EditText && null != frDialogTextChangeListener) {
+            ((EditText) view).addTextChangedListener(frDialogTextChangeListener);
+        }
+    }
+
+    public void setVisibleOrGone(@IdRes int id, boolean isVisible) {
+        View view = getView(id);
+        if (null != view) {
+            view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
 }

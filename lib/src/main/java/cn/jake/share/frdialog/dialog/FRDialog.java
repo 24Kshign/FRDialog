@@ -2,16 +2,17 @@ package cn.jake.share.frdialog.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
+import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
 import cn.jake.share.frdialog.util.StringUtil;
 
 
@@ -27,11 +28,6 @@ public class FRDialog extends Dialog {
         super(context, themeResId);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     public <T extends View> T getView(int viewId) {
         return dialogViewHelper.getView(viewId);
     }
@@ -40,8 +36,16 @@ public class FRDialog extends Dialog {
         dialogViewHelper.setText(id, charSequence);
     }
 
+    public void setVisibleOrGone(int id, boolean isVisible) {
+        dialogViewHelper.setVisibleOrGone(id, isVisible);
+    }
+
     public void setOnClickListener(int id, FRDialogClickListener onClickListener) {
         dialogViewHelper.setOnDialogClickListener(id, onClickListener);
+    }
+
+    public void addTextChangedListener(int id, FRDialogTextChangeListener frDialogTextChangeListener) {
+        dialogViewHelper.addTextChangedListener(id, frDialogTextChangeListener);
     }
 
     public void attach(FRBaseDialogBuilder baseBuilder) {
@@ -71,7 +75,10 @@ public class FRDialog extends Dialog {
             if (baseBuilder.mAnimation != 0) {
                 window.setWindowAnimations(baseBuilder.mAnimation);
             }
-            window.setLayout(baseBuilder.mWidth, baseBuilder.mHeight);
+            WindowManager.LayoutParams lp=window.getAttributes();
+            lp.width= (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels*baseBuilder.mWidthOffset);
+            lp.height=ViewGroup.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
         }
     }
 
@@ -116,7 +123,7 @@ public class FRDialog extends Dialog {
         public MDBuilder(Context context, int themeResId) {
             super(context, themeResId);
             mContentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_material, null);
-            mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
+            mWidthOffset = ViewGroup.LayoutParams.MATCH_PARENT;
         }
 
         //设置MD效果dialog的头部

@@ -95,10 +95,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void showCommonDialog() {
         final FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_common)
+                .setWidthOffset(0.6)
                 .setText(R.id.dcu_tv_cancel, "否")
                 .setText(R.id.dcu_tv_confirm, "是")
                 .setText(R.id.dcu_tv_title, "温馨提示")
-                .setText(R.id.dcu_tv_content, "1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
+                .setText(R.id.dcu_tv_content, "1.文字文字我是文字文字文字！")
                 .setDefaultAnim()
                 .show();
 

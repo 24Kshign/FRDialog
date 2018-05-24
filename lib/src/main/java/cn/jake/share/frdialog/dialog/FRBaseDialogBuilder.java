@@ -6,7 +6,6 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
@@ -34,8 +33,7 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
     public SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
     public SparseIntArray mTextColorArray = new SparseIntArray();
     public SparseArray<FRDialogClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
-    public int mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;  //dialog宽度
-    public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;  //dialog高度
+    public double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
     public int mAnimation; //dialog动画
     public int mGravity = Gravity.CENTER;  //dialog位置
 
@@ -49,19 +47,13 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
 
     //设置dialog宽度全屏
     public T setFullWidth() {
-        mWidth = ViewGroup.LayoutParams.MATCH_PARENT;
+        mWidthOffset = 1;
         return (T) this;
     }
 
     //设置dialog宽高
-    public T setWidth(int width) {
-        mWidth = width;
-        return (T) this;
-    }
-
-    //设置dialog宽高
-    public T setHeight(int height) {
-        mHeight = height;
+    public T setWidthOffset(double width) {
+        mWidthOffset = width;
         return (T) this;
     }
 
