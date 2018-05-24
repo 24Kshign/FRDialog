@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void showCommonDialog() {
-        final FRDialog dialog = new FRDialog.CommonBuilder(this)
+        FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_common)
                 .setWidthOffset(0.6)
                 .setText(R.id.dcu_tv_cancel, "否")

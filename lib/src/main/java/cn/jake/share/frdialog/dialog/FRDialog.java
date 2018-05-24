@@ -48,7 +48,7 @@ public class FRDialog extends Dialog {
         dialogViewHelper.addTextChangedListener(id, frDialogTextChangeListener);
     }
 
-    public void attach(FRBaseDialogBuilder baseBuilder) {
+    void attach(FRBaseDialogBuilder baseBuilder) {
         if (null != baseBuilder.mContentView) {
             dialogViewHelper = new FRDialogViewHelper(baseBuilder.mContentView);
         }
@@ -75,18 +75,18 @@ public class FRDialog extends Dialog {
             if (baseBuilder.mAnimation != 0) {
                 window.setWindowAnimations(baseBuilder.mAnimation);
             }
-            WindowManager.LayoutParams lp=window.getAttributes();
-            lp.width= (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels*baseBuilder.mWidthOffset);
-            lp.height=ViewGroup.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthOffset);
+            lp.height = baseBuilder.mHeight;
             window.setAttributes(lp);
         }
     }
 
-    public FRDialogViewHelper getDialogViewHelper() {
+    FRDialogViewHelper getDialogViewHelper() {
         return dialogViewHelper;
     }
 
-    public static class CommonBuilder extends FRBaseDialogBuilder<CommonBuilder> {
+    public static class CommonBuilder extends FRBaseDialogBuilder {
 
         public CommonBuilder(Context context) {
             this(context, R.style.dialog);
@@ -111,10 +111,10 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class MDBuilder extends FRBaseDialogBuilder<FRDialog.MDBuilder> {
+    public static class MDBuilder extends FRBaseDialogBuilder {
 
-        public CharSequence mNegativeContent;  //MD风格的取消按钮
-        public FRDialogClickListener mNegativeListener;  //MD风格取消按钮的点击事件
+        private CharSequence mNegativeContent;  //MD风格的取消按钮
+        private FRDialogClickListener mNegativeListener;  //MD风格取消按钮的点击事件
 
         public MDBuilder(Context context) {
             this(context, R.style.md_dialog);

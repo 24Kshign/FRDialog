@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
@@ -14,7 +15,7 @@ import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
  * Created by jack on 2018/2/7
  */
 
-public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
+public class FRBaseDialogBuilder {
 
     public Context mContext;
     public int mThemeResId;  //dialog主题
@@ -34,6 +35,7 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
     public SparseIntArray mTextColorArray = new SparseIntArray();
     public SparseArray<FRDialogClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
     public double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
+    public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     public int mAnimation; //dialog动画
     public int mGravity = Gravity.CENTER;  //dialog位置
 
@@ -46,77 +48,82 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
     }
 
     //设置dialog宽度全屏
-    public T setFullWidth() {
+    public FRBaseDialogBuilder setFullWidth() {
         mWidthOffset = 1;
-        return (T) this;
+        return this;
     }
 
-    //设置dialog宽高
-    public T setWidthOffset(double width) {
+    //设置dialog宽度比例
+    public FRBaseDialogBuilder setWidthOffset(double width) {
         mWidthOffset = width;
-        return (T) this;
+        return this;
+    }
+
+    public FRBaseDialogBuilder setHeight(int height) {
+        mHeight = height;
+        return this;
     }
 
     //设置dialog从底部弹出
-    public T setFromBottom() {
+    public FRBaseDialogBuilder setFromBottom() {
         mAnimation = R.style.dialog_from_bottom_anim;
         mGravity = Gravity.BOTTOM;
-        return (T) this;
+        return this;
     }
 
     //设置dialog默认动画
-    public T setDefaultAnim() {
+    public FRBaseDialogBuilder setDefaultAnim() {
         mAnimation = R.style.default_dialog_anim;
-        return (T) this;
+        return this;
     }
 
     //设置dialog其他动画
-    public T setAnimation(int animation) {
+    public FRBaseDialogBuilder setAnimation(int animation) {
         mAnimation = animation;
-        return (T) this;
+        return this;
     }
 
     //设置OnCancelListener监听
-    public T setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+    public FRBaseDialogBuilder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
         mOnCancelListener = onCancelListener;
-        return (T) this;
+        return this;
     }
 
     //设置OnDismissListener监听
-    public T setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+    public FRBaseDialogBuilder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        return (T) this;
+        return this;
     }
 
     //设置OnKeyListener监听
-    public T setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
+    public FRBaseDialogBuilder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
         mOnKeyListener = onKeyListener;
-        return (T) this;
+        return this;
     }
 
     //设置点击返回键是否消失Dialog
-    public T setCancelable(boolean isCancelable) {
+    public FRBaseDialogBuilder setCancelable(boolean isCancelable) {
         mCancelable = isCancelable;
-        return (T) this;
+        return this;
     }
 
     //设置点击dialog以外的区域是否消失Dialog
-    public T setCancelableOutside(boolean isCancelableOutside) {
+    public FRBaseDialogBuilder setCancelableOutside(boolean isCancelableOutside) {
         mCancelableOutside = isCancelableOutside;
-        return (T) this;
+        return this;
     }
 
-    public T setText(int id, CharSequence charSequence) {
+    public FRBaseDialogBuilder setText(int id, CharSequence charSequence) {
         mTextArray.put(id, charSequence);
-        return (T) this;
+        return this;
     }
 
-    public T setOnClickListener(int id, FRDialogClickListener onClickListener) {
+    public FRBaseDialogBuilder setOnClickListener(int id, FRDialogClickListener onClickListener) {
         mClickListenerArray.put(id, onClickListener);
-        return (T) this;
+        return this;
     }
 
-    public <T extends View> T getView(int viewId) {
+    public <VIEW extends View> VIEW getView(int viewId) {
         if (null != mDialogViewHelper) {
             return mDialogViewHelper.getView(viewId);
         }
@@ -142,11 +149,11 @@ public class FRBaseDialogBuilder<T extends FRBaseDialogBuilder> {
         return mDialog;
     }
 
-    public FRDialog getDialog() {
+    FRDialog getDialog() {
         return mDialog;
     }
 
-    public Context getContext() {
+    Context getContext() {
         return mContext;
     }
 

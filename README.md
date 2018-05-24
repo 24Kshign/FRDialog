@@ -66,3 +66,20 @@ dialog.setFromBottom()
 //设置弹出动画
 dialog.setAnimation(int anim)
 ```
+
+### 2018.5.24日更新
+
+将mWidth改成mWidthOffset，不让用户设置一个具体的宽度，而是让用户去设置一个宽度比例，然后通过改变window的LayoutParams来设置dialog的宽高：
+
+```
+WindowManager.LayoutParams lp = window.getAttributes();
+lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthOffset);
+lp.height = baseBuilder.mHeight;
+window.setAttributes(lp);
+```
+
+用法还是和之前一样：
+
+```
+dialog.setWidthOffset(0——1)  默认是0.9
+```
