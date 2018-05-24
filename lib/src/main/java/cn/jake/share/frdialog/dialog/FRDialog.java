@@ -2,6 +2,7 @@ package cn.jake.share.frdialog.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -138,54 +139,53 @@ public class FRDialog extends Dialog {
             return this;
         }
 
-        //设置MD效果dialog取消和确认键文字
-        public MDBuilder setNegativeAndPositive(CharSequence... charSequence) {
-            if (charSequence.length > 0) {
-                mNegativeContent = charSequence[0];
-            }
-            if (charSequence.length > 1) {
-                mTextArray.put(R.id.dialog_material_tv_confirm, charSequence[1]);
-            }
+        public MDBuilder setNegativeContentAndListener(CharSequence charSequence, FRDialogClickListener onClickListener) {
+            mNegativeContent = charSequence;
+            mNegativeListener = onClickListener;
+            mTextArray.put(R.id.dialog_material_tv_cancel, charSequence);
+            mClickListenerArray.put(R.id.dialog_material_tv_cancel, onClickListener);
             return this;
         }
 
-        //设置MD效果dialog取消和确认键文字颜色
-        public MDBuilder setNegativeAndPositiveTextColor(Integer... colors) {
-            if (colors.length > 0) {
-                mTextColorArray.put(R.id.dialog_material_tv_cancel, colors[0]);
-            }
-            if (colors.length > 1) {
-                mTextColorArray.put(R.id.dialog_material_tv_confirm, colors[1]);
-            }
-            return this;
-        }
-
-        //设置MD效果dialog确认键点击事件
-        public MDBuilder setPositiveListener(FRDialogClickListener onClickListener) {
+        public MDBuilder setPositiveContentAndListener(CharSequence charSequence, FRDialogClickListener onClickListener) {
+            mTextArray.put(R.id.dialog_material_tv_confirm, charSequence);
             mClickListenerArray.put(R.id.dialog_material_tv_confirm, onClickListener);
             return this;
         }
 
-        //设置MD效果dialog取消键点击事件（默认不设置的效果为弹窗消失）
-        public MDBuilder setNegativeListener(FRDialogClickListener onClickListener) {
-            mNegativeListener = onClickListener;
+        //设置MD效果dialog取消和确认键文字颜色
+        public MDBuilder setNegativeTextColor(int color) {
+            mTextColorArray.put(R.id.dialog_material_tv_cancel, color);
+            return this;
+        }
+
+        //设置MD效果dialog取消和确认键文字颜色
+        public MDBuilder setNegativeTextColor(ColorStateList color) {
+            mTextColorStateListArray.put(R.id.dialog_material_tv_cancel, color);
+            return this;
+        }
+
+        //设置MD效果dialog取消和确认键文字颜色
+        public MDBuilder setPositiveTextColor(int color) {
+            mTextColorArray.put(R.id.dialog_material_tv_confirm, color);
+            return this;
+        }
+
+        //设置MD效果dialog取消和确认键文字颜色
+        public MDBuilder setPositiveTextColor(ColorStateList color) {
+            mTextColorStateListArray.put(R.id.dialog_material_tv_confirm, color);
             return this;
         }
 
         @Override
         protected boolean attachView() {
-            if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent))) {
-                mTextArray.put(R.id.dialog_material_tv_cancel, mNegativeContent);
-                if (null != mNegativeListener) {
-                    mClickListenerArray.put(R.id.dialog_material_tv_cancel, mNegativeListener);
-                } else {
-                    getView(R.id.dialog_material_tv_cancel).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getDialog().dismiss();
-                        }
-                    });
-                }
+            if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent)) && null==mNegativeListener){
+                getView(R.id.dialog_material_tv_cancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getDialog().dismiss();
+                    }
+                });
             }
             return super.attachView();
         }

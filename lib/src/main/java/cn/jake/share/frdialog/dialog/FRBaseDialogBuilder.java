@@ -2,6 +2,7 @@ package cn.jake.share.frdialog.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
@@ -32,7 +33,8 @@ public class FRBaseDialogBuilder {
      */
     public View mContentView;
     public SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
-    public SparseIntArray mTextColorArray = new SparseIntArray();
+    public SparseIntArray mTextColorArray = new SparseIntArray();  //dialog布局上的文案颜色
+    public SparseArray<ColorStateList> mTextColorStateListArray = new SparseArray<>();  //dialog布局上的文案颜色
     public SparseArray<FRDialogClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
     public double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
     public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -166,6 +168,9 @@ public class FRBaseDialogBuilder {
         }
         for (int i = 0; i < mTextColorArray.size(); i++) {
             mDialogViewHelper.setTextColor(mTextColorArray.keyAt(i), mTextColorArray.valueAt(i));
+        }
+        for (int i = 0; i < mTextColorStateListArray.size(); i++) {
+            mDialogViewHelper.setTextColor(mTextColorStateListArray.keyAt(i), mTextColorStateListArray.valueAt(i));
         }
         return true;
     }

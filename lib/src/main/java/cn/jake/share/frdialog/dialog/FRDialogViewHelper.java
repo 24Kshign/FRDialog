@@ -1,5 +1,6 @@
 package cn.jake.share.frdialog.dialog;
 
+import android.content.res.ColorStateList;
 import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.view.View;
@@ -85,6 +86,13 @@ class FRDialogViewHelper {
     }
 
     public void setTextColor(@IdRes int id, int color) {
+        View view = getView(id);
+        if (view instanceof TextView) {
+            ((TextView) view).setTextColor(color);
+        }
+    }
+
+    public void setTextColor(@IdRes int id, ColorStateList color) {
         View view = getView(id);
         if (view instanceof TextView) {
             ((TextView) view).setTextColor(color);
