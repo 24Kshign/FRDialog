@@ -7,7 +7,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -87,7 +86,7 @@ public class FRDialog extends Dialog {
         return dialogViewHelper;
     }
 
-    public static class CommonBuilder extends FRBaseDialogBuilder {
+    public static class CommonBuilder extends FRBaseDialogBuilder<CommonBuilder> {
 
         public CommonBuilder(Context context) {
             this(context, R.style.dialog);
@@ -112,19 +111,18 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class MDBuilder extends FRBaseDialogBuilder {
+    public static class MDBuilder extends FRBaseDialogBuilder<MDBuilder> {
 
         private CharSequence mNegativeContent;  //MD风格的取消按钮
         private FRDialogClickListener mNegativeListener;  //MD风格取消按钮的点击事件
 
         public MDBuilder(Context context) {
-            this(context, R.style.md_dialog);
+            this(context, R.style.dialog);
         }
 
         public MDBuilder(Context context, int themeResId) {
             super(context, themeResId);
             mContentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_material, null);
-            mWidthOffset = ViewGroup.LayoutParams.MATCH_PARENT;
         }
 
         //设置MD效果dialog的头部

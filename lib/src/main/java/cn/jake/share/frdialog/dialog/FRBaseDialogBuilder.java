@@ -16,7 +16,7 @@ import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
  * Created by jack on 2018/2/7
  */
 
-public class FRBaseDialogBuilder {
+public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
 
     public Context mContext;
     public int mThemeResId;  //dialog主题
@@ -50,33 +50,33 @@ public class FRBaseDialogBuilder {
     }
 
     //设置dialog宽度全屏
-    public FRBaseDialogBuilder setFullWidth() {
+    public BUILDER setFullWidth() {
         mWidthOffset = 1;
-        return this;
+        return builder();
     }
 
     //设置dialog宽度比例
-    public FRBaseDialogBuilder setWidthOffset(double width) {
-        mWidthOffset = width;
-        return this;
+    public BUILDER setWidthOffset(double widthOffset) {
+        mWidthOffset = widthOffset;
+        return builder();
     }
 
-    public FRBaseDialogBuilder setHeight(int height) {
+    public BUILDER setHeight(int height) {
         mHeight = height;
-        return this;
+        return builder();
     }
 
     //设置dialog从底部弹出
-    public FRBaseDialogBuilder setFromBottom() {
+    public BUILDER setFromBottom() {
         mAnimation = R.style.dialog_from_bottom_anim;
         mGravity = Gravity.BOTTOM;
-        return this;
+        return builder();
     }
 
     //设置dialog默认动画
-    public FRBaseDialogBuilder setDefaultAnim() {
+    public BUILDER setDefaultAnim() {
         mAnimation = R.style.default_dialog_anim;
-        return this;
+        return builder();
     }
 
     //设置dialog其他动画
@@ -86,43 +86,47 @@ public class FRBaseDialogBuilder {
     }
 
     //设置OnCancelListener监听
-    public FRBaseDialogBuilder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+    public BUILDER setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
         mOnCancelListener = onCancelListener;
-        return this;
+        return builder();
     }
 
     //设置OnDismissListener监听
-    public FRBaseDialogBuilder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+    public BUILDER setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        return this;
+        return builder();
     }
 
     //设置OnKeyListener监听
-    public FRBaseDialogBuilder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
+    public BUILDER setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
         mOnKeyListener = onKeyListener;
-        return this;
+        return builder();
     }
 
     //设置点击返回键是否消失Dialog
-    public FRBaseDialogBuilder setCancelable(boolean isCancelable) {
+    public BUILDER setCancelable(boolean isCancelable) {
         mCancelable = isCancelable;
-        return this;
+        return builder();
     }
 
     //设置点击dialog以外的区域是否消失Dialog
-    public FRBaseDialogBuilder setCancelableOutside(boolean isCancelableOutside) {
+    public BUILDER setCancelableOutside(boolean isCancelableOutside) {
         mCancelableOutside = isCancelableOutside;
-        return this;
+        return builder();
     }
 
-    public FRBaseDialogBuilder setText(int id, CharSequence charSequence) {
+    public BUILDER setText(int id, CharSequence charSequence) {
         mTextArray.put(id, charSequence);
-        return this;
+        return builder();
     }
 
-    public FRBaseDialogBuilder setOnClickListener(int id, FRDialogClickListener onClickListener) {
+    public BUILDER setOnClickListener(int id, FRDialogClickListener onClickListener) {
         mClickListenerArray.put(id, onClickListener);
-        return this;
+        return builder();
+    }
+
+    private BUILDER builder(){
+        return (BUILDER) this;
     }
 
     public <VIEW extends View> VIEW getView(int viewId) {

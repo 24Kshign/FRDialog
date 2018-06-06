@@ -45,7 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void showRecyclerViewDialog() {
-        Toast.makeText(this, "正在开发中，敬请期待", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "敬请期待...", Toast.LENGTH_SHORT).show();
     }
 
     private void showFromBottomDialog() {
@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void showMDDialog() {
         FRDialog dialog = new FRDialog.MDBuilder(this)
-                .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
+                .setMessage("1.文字文字我是文字文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
                 .setTitle("温馨提示")
                 .setNegativeContentAndListener("否", null)
                 .setPositiveContentAndListener("是", new FRDialogClickListener() {
@@ -95,7 +95,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void showCommonDialog() {
         FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_common)
-                .setWidthOffset(0.6)
                 .setText(R.id.dcu_tv_cancel, "否")
                 .setText(R.id.dcu_tv_confirm, "是")
                 .setText(R.id.dcu_tv_title, "温馨提示")
