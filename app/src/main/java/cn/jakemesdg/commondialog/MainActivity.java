@@ -2,6 +2,7 @@ package cn.jakemesdg.commondialog;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -84,6 +85,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setMessage("1.文字文字我是文字文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
                 .setTitle("温馨提示")
                 .setNegativeContentAndListener("否", null)
+                .setNegativeTextColor(ContextCompat.getColor(this,R.color.c999999))
+                .setPositiveTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
                 .setPositiveContentAndListener("是", new FRDialogClickListener() {
                     @Override
                     public boolean onDialogClick(View view) {

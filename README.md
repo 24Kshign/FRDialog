@@ -41,15 +41,17 @@ private void showCommonDialog() {
 ```
 private void showMDDialog() {
     FRDialog dialog = new FRDialog.MDBuilder(this)
-            .setMessage("1.文字文字我是文字文字文字我是文字文字文字我是文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
-            .setTitle("温馨提示")
-            .setNegativeAndPositive("否", "是")
-            .setPositiveListener(new FRDialogClickListener() {
-                @Override
-                public boolean onDialogClick(View view) {
-                    return true;
-                }
-            }).show();
+                    .setMessage("1.文字文字我是文字文字！\n2.文字文字文字文字文字\n3.文字文字文字文字文字")
+                    .setTitle("温馨提示")
+                    .setNegativeContentAndListener("否", null)
+                    .setNegativeTextColor(ContextCompat.getColor(this,R.color.c999999))
+                    .setPositiveTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
+                    .setPositiveContentAndListener("是", new FRDialogClickListener() {
+                        @Override
+                        public boolean onDialogClick(View view) {
+                            return true;
+                        }
+                    }).show();
 }
 ```
 
