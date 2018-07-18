@@ -1,9 +1,24 @@
 # FRDialog
+
 用Builder模式重新打造一个dialog，案例中有两种Builder，分别是CommonBuilder和MDBuilder，如果还想实现其他的通用，继承自FRBaseDialogBuilder即可。
 
-### 1、用法：
+### 1、下载
 
-#### 1.1、普通Dialog
+Gradle：
+
+```
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.jack.frdialog:FRDialog:1.0.0'
+}
+```
+
+### 2、使用案例
+
+#### 2.1、普通Dialog
 
 ```
 private void showCommonDialog() {
@@ -36,7 +51,9 @@ private void showCommonDialog() {
 }
 ```
 
-#### 1.2、MaterialDesign Dialog
+![普通dialog](http://upload-images.jianshu.io/upload_images/490111-1e3afc3ba53a2b1c.jpg?imageMogr2/auto-orient/strip)
+
+#### 2.2、MaterialDesign Dialog
 
 ```
 private void showMDDialog() {
@@ -55,7 +72,11 @@ private void showMDDialog() {
 }
 ```
 
-### 2、特殊设置：
+![MD效果的dialog](http://upload-images.jianshu.io/upload_images/490111-04cd7476909d7cb6.jpg?imageMogr2/auto-orient/strip)
+
+![从底部弹出的dialog](http://upload-images.jianshu.io/upload_images/490111-70b3397b12f13aac.jpg?imageMogr2/auto-orient/strip)
+
+### 3、特殊设置：
 继承所有dialog的设置，同时还可以自定义以下设置
 
 ```
