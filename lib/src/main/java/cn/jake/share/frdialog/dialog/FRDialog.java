@@ -1,9 +1,10 @@
 package cn.jake.share.frdialog.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -12,11 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import cn.jake.share.frdialog.R;
+import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
 import cn.jake.share.frdialog.util.FRInputMethodManager;
@@ -41,6 +40,18 @@ public class FRDialog extends Dialog {
 
     public void setText(@IdRes int id, CharSequence charSequence) {
         dialogViewHelper.setText(id, charSequence);
+    }
+
+    public void setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
+        dialogViewHelper.setImageBitmap(viewId, bitmap);
+    }
+
+    public void setImageDrawable(@IdRes int viewId, Drawable drawable) {
+        dialogViewHelper.setImageDrawable(viewId, drawable);
+    }
+
+    public void setImagePath(@IdRes int viewId, CommonImageLoader commonImageLoader) {
+        dialogViewHelper.setImagePath(viewId, commonImageLoader);
     }
 
     public void setVisibleOrGone(@IdRes int id, boolean isVisible) {
@@ -122,7 +133,7 @@ public class FRDialog extends Dialog {
         //设置dialog布局文件
         public CommonBuilder setContentView(@LayoutRes int layoutRes) {
             if (layoutRes != 0) {
-                setContentView(LayoutInflater.from(getContext()).inflate(layoutRes, null));
+                setContentView(LayoutInflater.from(mContext).inflate(layoutRes, null));
             }
             return this;
         }
@@ -145,7 +156,7 @@ public class FRDialog extends Dialog {
 
         public MDBuilder(Context context, int themeResId) {
             super(context, themeResId);
-            mContentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_material, null);
+            mContentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_material, null);
         }
 
         //设置MD效果dialog的头部
@@ -201,12 +212,13 @@ public class FRDialog extends Dialog {
         @Override
         protected boolean attachView() {
             if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent)) && null == mNegativeListener) {
-                getView(R.id.dialog_material_tv_cancel).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getDialog().dismiss();
-                    }
-                });
+                mDialogViewHelper.setOnDialogClickListener(R.id.dialog_material_tv_cancel
+                        , new FRDialogClickListener() {
+                            @Override
+                            public boolean onDialogClick(View view) {
+                                return true;
+                            }
+                        });
             }
             return super.attachView();
         }

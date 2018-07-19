@@ -1,20 +1,12 @@
 package cn.jakemesdg.commondialog;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import cn.jake.share.frdialog.dialog.FRDialog;
-import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
-import cn.jake.share.frdialog.util.FRInputMethodManager;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -98,6 +90,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .show();
 
         dialog.setText(R.id.dcu_tv_confirm, "确定");
+
+        dialog.setImageDrawable(R.id.dcu_iv_image, ContextCompat.getDrawable(this, R.mipmap.ic_launcher));
 
         dialog.setOnClickListener(R.id.dcu_tv_cancel, view -> {
             Toast.makeText(MainActivity.this, "点击了否", Toast.LENGTH_SHORT).show();

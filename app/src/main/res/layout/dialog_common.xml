@@ -17,6 +17,13 @@
         android:textSize="18dp"
         tools:text="我是标题" />
 
+    <ImageView
+        android:id="@+id/dcu_iv_image"
+        android:layout_width="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_height="100dp" />
+
     <TextView
         android:id="@+id/dcu_tv_content"
         android:layout_width="match_parent"

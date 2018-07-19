@@ -1,14 +1,18 @@
 package cn.jake.share.frdialog.dialog;
 
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
+import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
 import cn.jake.share.frdialog.util.StringUtil;
@@ -119,6 +123,29 @@ class FRDialogViewHelper {
         View view = getView(id);
         if (null != view) {
             view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
+        View view = getView(viewId);
+        if (null != view && view instanceof ImageView) {
+            ((ImageView) (view)).setImageBitmap(bitmap);
+        }
+    }
+
+    public void setImageDrawable(@IdRes int viewId, Drawable drawable) {
+        View view = getView(viewId);
+        if (null != view && view instanceof ImageView) {
+            ((ImageView) (view)).setImageDrawable(drawable);
+        }
+    }
+
+    public void setImagePath(@IdRes int viewId, CommonImageLoader commonImageLoader) {
+        //将第三方加载图片框架与之分离（解耦）——————这里主要参考红橙Darren的博客
+        //https://www.jianshu.com/p/2c5a99984919
+        View view = getView(viewId);
+        if (null != view && view instanceof ImageView) {
+            commonImageLoader.loadImageView(((ImageView) (view)), commonImageLoader.getImagePath());
         }
     }
 }

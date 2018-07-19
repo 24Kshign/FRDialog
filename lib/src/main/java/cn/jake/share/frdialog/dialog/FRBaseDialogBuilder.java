@@ -3,13 +3,18 @@ package cn.jake.share.frdialog.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import cn.jake.share.frdialog.R;
+import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 
 /**
@@ -18,7 +23,7 @@ import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 
 public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
 
-    public Context mContext;
+    Context mContext;
     public int mThemeResId;  //dialog主题
     public boolean mCancelable = true;  //点击返回键是否dismiss
     public boolean mCancelableOutside = true;  //点击外部是否dismiss
@@ -32,16 +37,24 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
      * 布局和布局Id
      */
     public View mContentView;
-    public SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
-    public SparseIntArray mTextColorArray = new SparseIntArray();  //dialog布局上的文案颜色
-    public SparseArray<ColorStateList> mTextColorStateListArray = new SparseArray<>();  //dialog布局上的文案颜色
-    public SparseArray<FRDialogClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
+    SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
+    SparseIntArray mTextColorArray = new SparseIntArray();  //dialog布局上的文案颜色
+    SparseArray<ColorStateList> mTextColorStateListArray = new SparseArray<>();  //dialog布局上的文案颜色
+    SparseArray<FRDialogClickListener> mClickListenerArray = new SparseArray<>(); //dialog上控件的点击事件
+
+    /**
+     * 图片
+     */
+    SparseArray<Drawable> mImageDrawableArray = new SparseArray<>();
+    SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
+    SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
+
     public double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
     public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     public int mAnimation; //dialog动画
     public int mGravity = Gravity.CENTER;  //dialog位置
 
-    private FRDialogViewHelper mDialogViewHelper;
+    FRDialogViewHelper mDialogViewHelper;
     private FRDialog mDialog;
 
     public FRBaseDialogBuilder(Context context, int themeResId) {
@@ -120,12 +133,27 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
         return builder();
     }
 
+    public BUILDER setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
+        mImageBitmapArray.put(viewId, bitmap);
+        return builder();
+    }
+
+    public BUILDER setImageDrawable(@IdRes int viewId, Drawable drawable) {
+        mImageDrawableArray.put(viewId, drawable);
+        return builder();
+    }
+
+    public BUILDER setImagePath(@IdRes int viewId, CommonImageLoader commonImageLoader) {
+        mImageCommonImageLoaderArray.put(viewId, commonImageLoader);
+        return builder();
+    }
+
     public BUILDER setOnClickListener(int id, FRDialogClickListener onClickListener) {
         mClickListenerArray.put(id, onClickListener);
         return builder();
     }
 
-    private BUILDER builder(){
+    private BUILDER builder() {
         return (BUILDER) this;
     }
 
@@ -155,26 +183,38 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
         return mDialog;
     }
 
-    FRDialog getDialog() {
-        return mDialog;
-    }
-
-    Context getContext() {
-        return mContext;
-    }
-
     protected boolean attachView() {
+        /**
+         * 文字，颜色
+         */
         for (int i = 0; i < mTextArray.size(); i++) {
             mDialogViewHelper.setText(mTextArray.keyAt(i), mTextArray.valueAt(i));
-        }
-        for (int i = 0; i < mClickListenerArray.size(); i++) {
-            mDialogViewHelper.setOnDialogClickListener(mClickListenerArray.keyAt(i), mClickListenerArray.valueAt(i));
         }
         for (int i = 0; i < mTextColorArray.size(); i++) {
             mDialogViewHelper.setTextColor(mTextColorArray.keyAt(i), mTextColorArray.valueAt(i));
         }
         for (int i = 0; i < mTextColorStateListArray.size(); i++) {
             mDialogViewHelper.setTextColor(mTextColorStateListArray.keyAt(i), mTextColorStateListArray.valueAt(i));
+        }
+
+        /**
+         * 点击事件
+         */
+        for (int i = 0; i < mClickListenerArray.size(); i++) {
+            mDialogViewHelper.setOnDialogClickListener(mClickListenerArray.keyAt(i), mClickListenerArray.valueAt(i));
+        }
+
+        /**
+         * 图片
+         */
+        for (int i = 0; i < mImageBitmapArray.size(); i++) {
+            mDialogViewHelper.setImageBitmap(mImageBitmapArray.keyAt(i), mImageBitmapArray.valueAt(i));
+        }
+        for (int i = 0; i < mImageDrawableArray.size(); i++) {
+            mDialogViewHelper.setImageDrawable(mImageDrawableArray.keyAt(i), mImageDrawableArray.valueAt(i));
+        }
+        for (int i = 0; i < mImageCommonImageLoaderArray.size(); i++) {
+            mDialogViewHelper.setImagePath(mImageCommonImageLoaderArray.keyAt(i), mImageCommonImageLoaderArray.valueAt(i));
         }
         return true;
     }
