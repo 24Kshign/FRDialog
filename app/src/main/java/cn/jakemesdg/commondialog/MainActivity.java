@@ -86,36 +86,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setPositiveContentAndListener("是", view -> true).show();
     }
 
-    public static void autoHideSoftInput(Activity activity, MotionEvent event) {
-        if (event.getAction() != MotionEvent.ACTION_DOWN) {
-            return;
-        }
-
-        View focusView = activity.getCurrentFocus();
-        if (focusView == null) {
-            return;
-        }
-        if (!(focusView instanceof EditText)) {
-            return;
-        }
-
-        float x = event.getX();
-        float y = event.getY();
-
-        int[] location = {0, 0};
-        focusView.getLocationInWindow(location);
-        int left = location[0];
-        int top = location[1];
-        int bottom = top + focusView.getHeight();
-        int right = left + focusView.getWidth();
-
-        if (left <= x && x < right && top <= y && y < bottom) {
-            // 点击事件在EditText的区域里
-            return;
-        }
-        FRInputMethodManager.hideSoftInput(activity, focusView);
-    }
-
     private void showCommonDialog() {
         FRDialog dialog = new FRDialog.CommonBuilder(this)
                 .setContentView(R.layout.dialog_common)
@@ -130,7 +100,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         dialog.setText(R.id.dcu_tv_confirm, "确定");
 
         dialog.setOnClickListener(R.id.dcu_tv_cancel, view -> {
-            Toast.makeText(MainActivity.this, "点击了是", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "点击了否", Toast.LENGTH_SHORT).show();
             return true;
         });
 

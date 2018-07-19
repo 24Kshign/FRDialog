@@ -106,3 +106,50 @@ window.setAttributes(lp);
 ```
 dialog.setWidthOffset(0——1)  默认是0.9
 ```
+
+### 2018.7.19日更新
+新增点击dialog中非EditText区域隐藏软键盘
+
+```
+重写dispatchTouchEvent方法进行拦截：
+
+/**
+ * 点击dialog中除EditText以外的区域隐藏软键盘
+ *
+ * @param ev
+ * @return
+ */
+@Override
+public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+    FRInputMethodManager.autoHideSoftInput(this, ev);
+    return super.dispatchTouchEvent(ev);
+}
+
+//核心方法
+public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
+    if (event.getAction() != MotionEvent.ACTION_DOWN) {
+        return false;
+    }
+
+    if (!(view instanceof EditText)) {
+        return false;
+    }
+
+    float x = event.getX();
+    float y = event.getY();
+
+    int[] location = {0, 0};
+    view.getLocationInWindow(location);
+    int left = location[0];
+    int top = location[1];
+    int bottom = top + view.getHeight();
+    int right = left + view.getWidth();
+    if (left <= x && x < right && top <= y && y < bottom) {
+        // 点击事件在EditText的区域里
+        return false;
+    }
+
+    return true;
+}
+```
+用法不变。
