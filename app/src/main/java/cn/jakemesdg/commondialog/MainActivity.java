@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
         dialog.setOnClickListener(R.id.dcu_tv_confirm, v -> {
-            Toast.makeText(MainActivity.this, "点击了是", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, dialog.getContentById(R.id.dcu_et_input), Toast.LENGTH_SHORT).show();
             return false;
         });
     }

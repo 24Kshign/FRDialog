@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -38,20 +39,24 @@ public class FRDialog extends Dialog {
         return dialogViewHelper.getView(viewId);
     }
 
-    public void setText(int id, CharSequence charSequence) {
+    public void setText(@IdRes int id, CharSequence charSequence) {
         dialogViewHelper.setText(id, charSequence);
     }
 
-    public void setVisibleOrGone(int id, boolean isVisible) {
+    public void setVisibleOrGone(@IdRes int id, boolean isVisible) {
         dialogViewHelper.setVisibleOrGone(id, isVisible);
     }
 
-    public void setOnClickListener(int id, FRDialogClickListener onClickListener) {
+    public void setOnClickListener(@IdRes int id, FRDialogClickListener onClickListener) {
         dialogViewHelper.setOnDialogClickListener(id, onClickListener);
     }
 
-    public void addTextChangedListener(int id, FRDialogTextChangeListener frDialogTextChangeListener) {
+    public void addTextChangedListener(@IdRes int id, FRDialogTextChangeListener frDialogTextChangeListener) {
         dialogViewHelper.addTextChangedListener(id, frDialogTextChangeListener);
+    }
+
+    public String getContentById(@IdRes int id) {
+        return dialogViewHelper.getContentById(id);
     }
 
     void attach(FRBaseDialogBuilder baseBuilder) {

@@ -55,6 +55,15 @@ class FRDialogViewHelper {
         return (T) view;
     }
 
+    public String getContentById(@IdRes int id) {
+        View view = getView(id);
+        if (view instanceof TextView) {
+            return ((TextView) view).getText().toString();
+        } else {
+            return "";
+        }
+    }
+
     public void setText(@IdRes int id, CharSequence charSequence) {
         View view = getView(id);
         if (view instanceof TextView) {
