@@ -1,18 +1,24 @@
 package cn.jake.share.frdialog.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
+import cn.jake.share.frdialog.util.FRInputMethodManager;
 import cn.jake.share.frdialog.util.StringUtil;
 
 
@@ -80,6 +86,18 @@ public class FRDialog extends Dialog {
             lp.height = baseBuilder.mHeight;
             window.setAttributes(lp);
         }
+    }
+
+    /**
+     * 点击dialog中除EditText以外的区域隐藏软键盘
+     *
+     * @param ev
+     * @return
+     */
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        FRInputMethodManager.autoHideSoftInput(this, ev);
+        return super.dispatchTouchEvent(ev);
     }
 
     FRDialogViewHelper getDialogViewHelper() {
@@ -177,7 +195,7 @@ public class FRDialog extends Dialog {
 
         @Override
         protected boolean attachView() {
-            if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent)) && null==mNegativeListener){
+            if (!StringUtil.isEmpty(StringUtil.valueOf(mNegativeContent)) && null == mNegativeListener) {
                 getView(R.id.dialog_material_tv_cancel).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
