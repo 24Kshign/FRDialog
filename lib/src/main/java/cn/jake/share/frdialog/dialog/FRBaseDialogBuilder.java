@@ -24,19 +24,19 @@ import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
 
     Context mContext;
-    public int mThemeResId;  //dialog主题
-    public boolean mCancelable = true;  //点击返回键是否dismiss
-    public boolean mCancelableOutside = true;  //点击外部是否dismiss
+    int mThemeResId;  //dialog主题
+    boolean mCancelable = true;  //点击返回键是否dismiss
+    boolean mCancelableOutside = true;  //点击外部是否dismiss
     /**
      * dialog监听事件
      */
-    public DialogInterface.OnDismissListener mOnDismissListener;
-    public DialogInterface.OnCancelListener mOnCancelListener;
-    public DialogInterface.OnKeyListener mOnKeyListener;
+    DialogInterface.OnDismissListener mOnDismissListener;
+    DialogInterface.OnCancelListener mOnCancelListener;
+    DialogInterface.OnKeyListener mOnKeyListener;
     /**
      * 布局和布局Id
      */
-    public View mContentView;
+    View mContentView;
     SparseArray<CharSequence> mTextArray = new SparseArray<>();  //dialog布局上的文案
     SparseIntArray mTextColorArray = new SparseIntArray();  //dialog布局上的文案颜色
     SparseArray<ColorStateList> mTextColorStateListArray = new SparseArray<>();  //dialog布局上的文案颜色
@@ -49,10 +49,11 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
     SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
     SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
 
-    public double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
-    public int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-    public int mAnimation; //dialog动画
-    public int mGravity = Gravity.CENTER;  //dialog位置
+    double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
+    double mHeightOffset = 0;  //dialog高度占屏幕高度的比例
+    int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    int mAnimation; //dialog动画
+    int mGravity = Gravity.CENTER;  //dialog位置
 
     FRDialogViewHelper mDialogViewHelper;
     private FRDialog mDialog;

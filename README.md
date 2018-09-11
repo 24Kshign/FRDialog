@@ -153,3 +153,60 @@ public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
 }
 ```
 用法不变。
+
+### 2018.9.11日更新
+
+新增recyclerview样式的dialogBuilder
+
+![](http://ooaap25kv.bkt.clouddn.com/18-9-11/67216384.jpg)
+
+具体功能有：
+
+- 设置一个列表布局，只需要传一个adapter就好了
+
+- 可以给列表添加头部和底部
+
+- 可以给dialog添加头部和底部
+
+用法：
+
+```
+    private void showRecyclerViewDialog() {
+        List<Object> mDataList = new ArrayList<>();
+        mDataList.add(new TestDataBean("张三", "2018-09-11 14:00"));
+        mDataList.add(new TestDataBean("李四", "2018-09-11 11:00"));
+        mDataList.add(new TestDataBean("王五", "2018-09-11 12:00"));
+        mDataList.add(new TestDataBean("李四", "2018-09-11 13:00"));
+        mDataList.add(new TestDataBean("张三", "2018-09-11 16:00"));
+        mDataList.add(new TestDataBean("王五", "2018-09-11 15:00"));
+
+
+        final FRDialog dialog = new FRDialog.RecyclerViewBuilder(this)
+                .setLayoutManager(new LinearLayoutManager(MainActivity.this))
+                .setAdapter(new FRBaseDialogAdapter<TestDataBean>(MainActivity.this) {
+
+                    @Override
+                    protected int getLayoutRes() {
+                        return R.layout.item_test;
+                    }
+
+                    @Override
+                    protected void convert(FRBaseDialogViewHolder holder, TestDataBean dataBean, int position, List<Object> payloads) {
+                        holder.setImageResource(R.id.it_iv_image, R.mipmap.ic_launcher_round);
+                        holder.setText(R.id.it_tv_title, dataBean.getName());
+                        holder.setText(R.id.it_tv_time, dataBean.getTime());
+                    }
+                }).setDataList(mDataList)
+                .setHeightOffset(0.5)
+                .addRecyclerViewHeader(R.layout.layout_header)
+                .addDialogFooter(R.layout.layout_footer)
+                .setOnClickListener(R.id.lf_tv_cancel, view -> true)
+                .setOnClickListener(R.id.lf_tv_confirm, view -> {
+                    Toast.makeText(MainActivity.this, "点击了确定", Toast.LENGTH_SHORT).show();
+                    return false;
+                })
+                .show();
+    }
+```
+
+详细可以参照demo中的。

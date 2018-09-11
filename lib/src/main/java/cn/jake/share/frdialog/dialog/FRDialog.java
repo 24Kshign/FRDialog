@@ -8,16 +8,26 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.interfaces.FRDialogTextChangeListener;
+import cn.jake.share.frdialog.recyclerview.FRBaseDialogAdapter;
+import cn.jake.share.frdialog.recyclerview.wrap.WrapRecyclerAdapter;
+import cn.jake.share.frdialog.recyclerview.wrap.WrapRecyclerView;
 import cn.jake.share.frdialog.util.FRInputMethodManager;
 import cn.jake.share.frdialog.util.StringUtil;
 
@@ -99,7 +109,11 @@ public class FRDialog extends Dialog {
             }
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthOffset);
-            lp.height = baseBuilder.mHeight;
+            if (baseBuilder.mHeightOffset != 0) {
+                lp.height = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().heightPixels * baseBuilder.mHeightOffset);
+            } else {
+                lp.height = baseBuilder.mHeight;
+            }
             window.setAttributes(lp);
         }
     }
@@ -219,6 +233,115 @@ public class FRDialog extends Dialog {
                                 return true;
                             }
                         });
+            }
+            return super.attachView();
+        }
+    }
+
+    public static class RecyclerViewBuilder extends FRBaseDialogBuilder<RecyclerViewBuilder> {
+
+        private WrapRecyclerView mRecyclerView;
+        private RecyclerView.LayoutManager mLayoutManager;
+        private FRBaseDialogAdapter mDialogAdapter;
+        private List<View> mViewHeaders;
+        private List<View> mViewFooters;
+        private List<Object> mDataList;
+
+        public RecyclerViewBuilder(Context context) {
+            this(context, R.style.dialog);
+        }
+
+        public RecyclerViewBuilder(Context context, int themeResId) {
+            super(context, themeResId);
+            mContentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_recyclerview, null);
+            mViewHeaders = new ArrayList<>();
+            mViewFooters = new ArrayList<>();
+        }
+
+
+        //设置dialog宽度比例
+        public RecyclerViewBuilder setHeightOffset(double heightOffset) {
+            mHeightOffset = heightOffset;
+            return this;
+        }
+
+        public RecyclerViewBuilder setAdapter(FRBaseDialogAdapter dialogAdapter) {
+            mDialogAdapter = dialogAdapter;
+            return this;
+        }
+
+        public RecyclerViewBuilder setDataList(List<Object> dataList) {
+            mDataList = dataList;
+            return this;
+        }
+
+        public RecyclerViewBuilder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+            mLayoutManager = layoutManager;
+            return this;
+        }
+
+        public RecyclerViewBuilder addDialogHeader(@LayoutRes int layoutRes) {
+            ((ViewGroup) mContentView).addView(LayoutInflater.from(mContext).inflate(layoutRes
+                    , (ViewGroup) mContentView, false), 0);
+            return this;
+        }
+
+        public RecyclerViewBuilder addDialogHeader(View viewHeader) {
+            ((ViewGroup) mContentView).addView(viewHeader, 0);
+            return this;
+        }
+
+        public RecyclerViewBuilder addDialogFooter(View viewFooter) {
+            ((ViewGroup) mContentView).addView(viewFooter);
+            return this;
+        }
+
+        public RecyclerViewBuilder addDialogFooter(@LayoutRes int layoutRes) {
+            ((ViewGroup) mContentView).addView(LayoutInflater.from(mContext).inflate(layoutRes
+                    , (ViewGroup) mContentView, false));
+            return this;
+        }
+
+        public RecyclerViewBuilder addRecyclerViewHeader(@LayoutRes int layoutRes) {
+            mViewHeaders.add(LayoutInflater.from(mContext).inflate(layoutRes, (ViewGroup) mContentView
+                    , false));
+            return this;
+        }
+
+        public RecyclerViewBuilder addRecyclerViewHeader(View viewHeader) {
+            mViewHeaders.add(viewHeader);
+            return this;
+        }
+
+        public RecyclerViewBuilder addRecyclerViewFooter(View viewFooter) {
+            mViewFooters.add(viewFooter);
+            return this;
+        }
+
+        public RecyclerViewBuilder addRecyclerViewFooter(@LayoutRes int layoutRes) {
+            mViewFooters.add(LayoutInflater.from(mContext).inflate(layoutRes, (ViewGroup) mContentView, false));
+            return this;
+        }
+
+        @Override
+        protected boolean attachView() {
+            if (null != mDialogAdapter) {
+                WrapRecyclerAdapter wrapRecyclerAdapter = new WrapRecyclerAdapter(mDialogAdapter);
+                if (null != mDataList) {
+                    mDialogAdapter.setDataList(mDataList);
+                }
+                if (null == mLayoutManager) {
+                    mLayoutManager = new LinearLayoutManager(mContext);
+                }
+                mRecyclerView = getView(R.id.dr_recyclerview);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                for (int i = 0; i < mViewHeaders.size(); i++) {
+                    wrapRecyclerAdapter.addHeaderView(mViewHeaders.get(i));
+                }
+                for (int i = 0; i < mViewFooters.size(); i++) {
+                    wrapRecyclerAdapter.addFooterView(mViewFooters.get(i));
+                }
+                mRecyclerView.setAdapter(wrapRecyclerAdapter);
             }
             return super.attachView();
         }
