@@ -1,11 +1,18 @@
 package cn.jake.share.frdialog.dialog;
 
+import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
@@ -21,10 +28,10 @@ import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
  * Created by jack on 2018/2/7
  */
 
-public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
+public class FRBaseDialogBuilder {
 
     Context mContext;
-    int mThemeResId;  //dialog主题
+    private int mThemeResId;  //dialog主题
     boolean mCancelable = true;  //点击返回键是否dismiss
     boolean mCancelableOutside = true;  //点击外部是否dismiss
     /**
@@ -45,52 +52,57 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
     /**
      * 图片
      */
-    SparseArray<Drawable> mImageDrawableArray = new SparseArray<>();
-    SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
-    SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
+    private SparseArray<Drawable> mImageDrawableArray = new SparseArray<>();
+    private SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
+    private SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
 
     double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
     double mHeightOffset = 0;  //dialog高度占屏幕高度的比例
     int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     int mAnimation; //dialog动画
     int mGravity = Gravity.CENTER;  //dialog位置
+    boolean isInService;
 
     FRDialogViewHelper mDialogViewHelper;
     private FRDialog mDialog;
 
-    public FRBaseDialogBuilder(Context context, int themeResId) {
+    FRBaseDialogBuilder(Context context, int themeResId) {
+        //判断 dialog 是否在 Service 中弹出，需要适配一下
+        if (context instanceof Service) {
+            isInService = true;
+        }
         this.mContext = context;
         this.mThemeResId = themeResId;
     }
 
     //设置dialog宽度全屏
-    public BUILDER setFullWidth() {
+    public FRBaseDialogBuilder setFullWidth() {
         mWidthOffset = 1;
-        return builder();
+        return this;
     }
 
     //设置dialog宽度比例
-    public BUILDER setWidthOffset(double widthOffset) {
+    public FRBaseDialogBuilder setWidthOffset(double widthOffset) {
         mWidthOffset = widthOffset;
-        return builder();
+        return this;
     }
 
-    public BUILDER setHeight(int height) {
+    public FRBaseDialogBuilder setHeight(int height) {
         mHeight = height;
-        return builder();
+        return this;
     }
 
     //设置dialog从底部弹出
-    public BUILDER setFromBottom() {
+    public FRBaseDialogBuilder setFromBottom() {
         mAnimation = R.style.dialog_from_bottom_anim;
         mGravity = Gravity.BOTTOM;
-        return builder();
+        return this;
     }
 
     //设置dialog默认动画
-    public BUILDER setDefaultAnim() {
+    public FRBaseDialogBuilder setDefaultAnim() {
         mAnimation = R.style.default_dialog_anim;
-        return builder();
+        return this;
     }
 
     //设置dialog其他动画
@@ -100,62 +112,58 @@ public class FRBaseDialogBuilder<BUILDER extends FRBaseDialogBuilder> {
     }
 
     //设置OnCancelListener监听
-    public BUILDER setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
+    public FRBaseDialogBuilder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
         mOnCancelListener = onCancelListener;
-        return builder();
+        return this;
     }
 
     //设置OnDismissListener监听
-    public BUILDER setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+    public FRBaseDialogBuilder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
-        return builder();
+        return this;
     }
 
     //设置OnKeyListener监听
-    public BUILDER setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
+    public FRBaseDialogBuilder setOnKeyListener(DialogInterface.OnKeyListener onKeyListener) {
         mOnKeyListener = onKeyListener;
-        return builder();
+        return this;
     }
 
     //设置点击返回键是否消失Dialog
-    public BUILDER setCancelable(boolean isCancelable) {
+    public FRBaseDialogBuilder setCancelable(boolean isCancelable) {
         mCancelable = isCancelable;
-        return builder();
+        return this;
     }
 
     //设置点击dialog以外的区域是否消失Dialog
-    public BUILDER setCancelableOutside(boolean isCancelableOutside) {
+    public FRBaseDialogBuilder setCancelableOutside(boolean isCancelableOutside) {
         mCancelableOutside = isCancelableOutside;
-        return builder();
+        return this;
     }
 
-    public BUILDER setText(int id, CharSequence charSequence) {
+    public FRBaseDialogBuilder setText(int id, CharSequence charSequence) {
         mTextArray.put(id, charSequence);
-        return builder();
+        return this;
     }
 
-    public BUILDER setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
+    public FRBaseDialogBuilder setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
         mImageBitmapArray.put(viewId, bitmap);
-        return builder();
+        return this;
     }
 
-    public BUILDER setImageDrawable(@IdRes int viewId, Drawable drawable) {
+    public FRBaseDialogBuilder setImageDrawable(@IdRes int viewId, Drawable drawable) {
         mImageDrawableArray.put(viewId, drawable);
-        return builder();
+        return this;
     }
 
-    public BUILDER setImagePath(@IdRes int viewId, CommonImageLoader commonImageLoader) {
+    public FRBaseDialogBuilder setImagePath(@IdRes int viewId, CommonImageLoader commonImageLoader) {
         mImageCommonImageLoaderArray.put(viewId, commonImageLoader);
-        return builder();
+        return this;
     }
 
-    public BUILDER setOnClickListener(int id, FRDialogClickListener onClickListener) {
+    public FRBaseDialogBuilder setOnClickListener(int id, FRDialogClickListener onClickListener) {
         mClickListenerArray.put(id, onClickListener);
-        return builder();
-    }
-
-    private BUILDER builder() {
-        return (BUILDER) this;
+        return this;
     }
 
     public <VIEW extends View> VIEW getView(int viewId) {

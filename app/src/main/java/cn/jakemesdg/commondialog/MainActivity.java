@@ -1,12 +1,15 @@
 package cn.jakemesdg.commondialog;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jake.share.frdialog.dialog.FRDialog;
-import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
 import cn.jake.share.frdialog.recyclerview.FRBaseDialogAdapter;
 import cn.jake.share.frdialog.recyclerview.FRBaseDialogViewHolder;
+import cn.jakemesdg.commondialog.service.DialogService;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
+    public static final int RC_OVERLAY = 0x01101;
 
 
     @Override
@@ -34,6 +39,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.am_md_dialog).setOnClickListener(this);
         findViewById(R.id.am_from_bottom_dialog).setOnClickListener(this);
         findViewById(R.id.am_recyclerview_dialog).setOnClickListener(this);
+        findViewById(R.id.am_start_service).setOnClickListener(this);
+        findViewById(R.id.am_stop_service).setOnClickListener(this);
     }
 
     @Override
@@ -50,6 +57,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.am_recyclerview_dialog:
                 showRecyclerViewDialog();
+                break;
+            case R.id.am_start_service:
+                // 在Service中弹出dialog需要适配
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                    openOverlaySettings();
+                } else {
+                    startService(new Intent(this, DialogService.class));
+                }
+                break;
+            case R.id.am_stop_service:
+                stopService(new Intent(this, DialogService.class));
                 break;
         }
     }
@@ -90,39 +108,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 })
                 .show();
     }
-
-//    private void showRecyclerViewDialog() {
-//        List<TestDataBean> mDataList = new ArrayList<>();
-//        mDataList.add(new TestDataBean("张三", "2018-09-11 14:00"));
-//        mDataList.add(new TestDataBean("李四", "2018-09-11 11:00"));
-//        mDataList.add(new TestDataBean("王五", "2018-09-11 12:00"));
-//        mDataList.add(new TestDataBean("李四", "2018-09-11 13:00"));
-//        mDataList.add(new TestDataBean("张三", "2018-09-11 16:00"));
-//        mDataList.add(new TestDataBean("王五", "2018-09-11 15:00"));
-//
-//        FRBaseDialogAdapter<TestDataBean> mAdapter=new FRBaseDialogAdapter<TestDataBean>(this) {
-//            @Override
-//            protected int getLayoutRes() {
-//                return R.layout.item_test;
-//            }
-//
-//            @Override
-//            protected void convert(FRBaseDialogViewHolder holder, TestDataBean dataBean, int position, List<Object> payloads) {
-//                holder.setImageResource(R.id.it_iv_image, R.mipmap.ic_launcher_round);
-//                holder.setText(R.id.it_tv_title, dataBean.getName());
-//                holder.setText(R.id.it_tv_time, dataBean.getTime());
-//            }
-//        };
-//
-//        mAdapter.setDataList(mDataList);
-//
-//        final FRDialog dialog = new FRDialog.RecyclerViewBuilder(this)
-//                .setLayoutManager(new LinearLayoutManager(MainActivity.this))
-//                .setAdapter(mAdapter)
-//                .setHeightOffset(0.5)
-//                .addRecyclerViewHeader(R.layout.layout_header)
-//                .show();
-//    }
 
     private void showFromBottomDialog() {
         final FRDialog dialog = new FRDialog.CommonBuilder(this)
@@ -178,5 +163,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Toast.makeText(MainActivity.this, dialog.getContentById(R.id.dcu_et_input), Toast.LENGTH_SHORT).show();
             return false;
         });
+    }
+
+    private void openOverlaySettings() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            try {
+                //打开权限申请页面
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, RC_OVERLAY);
+            } catch (ActivityNotFoundException e) {
+                Log.e("TAG", "ActivityNotFoundException--->" + e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RC_OVERLAY:
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(this)) {
+                        startService(new Intent(this, DialogService.class));
+                    }
+                }
+                break;
+        }
     }
 }

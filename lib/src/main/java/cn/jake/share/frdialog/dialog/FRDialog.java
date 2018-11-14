@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,7 +22,9 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import cn.jake.share.frdialog.BuildConfig;
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
@@ -104,6 +108,13 @@ public class FRDialog extends Dialog {
         Window window = getWindow();
         if (null != window) {
             window.setGravity(baseBuilder.mGravity);
+            if (baseBuilder.isInService) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY - 1);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                }
+            }
             if (baseBuilder.mAnimation != 0) {
                 window.setWindowAnimations(baseBuilder.mAnimation);
             }
@@ -134,7 +145,7 @@ public class FRDialog extends Dialog {
         return dialogViewHelper;
     }
 
-    public static class CommonBuilder extends FRBaseDialogBuilder<CommonBuilder> {
+    public static class CommonBuilder extends FRBaseDialogBuilder {
 
         public CommonBuilder(Context context) {
             this(context, R.style.dialog);
@@ -159,7 +170,7 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class MDBuilder extends FRBaseDialogBuilder<MDBuilder> {
+    public static class MDBuilder extends FRBaseDialogBuilder {
 
         private CharSequence mNegativeContent;  //MD风格的取消按钮
         private FRDialogClickListener mNegativeListener;  //MD风格取消按钮的点击事件
@@ -238,7 +249,7 @@ public class FRDialog extends Dialog {
         }
     }
 
-    public static class RecyclerViewBuilder extends FRBaseDialogBuilder<RecyclerViewBuilder> {
+    public static class RecyclerViewBuilder extends FRBaseDialogBuilder {
 
         private WrapRecyclerView mRecyclerView;
         private RecyclerView.LayoutManager mLayoutManager;
