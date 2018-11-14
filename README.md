@@ -211,7 +211,7 @@ public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
 
 详细可以参照demo中的。
 
-### 2018.9.11日更新
+### 2018.11.14日更新
 
 新增适配在Service中国弹出dialog
 
