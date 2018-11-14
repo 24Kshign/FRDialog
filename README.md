@@ -211,6 +211,65 @@ public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
 
 详细可以参照demo中的。
 
+### 2018.9.11日更新
+
+新增适配在Service中国弹出dialog
+
+![](https://ws1.sinaimg.cn/large/005MjwGuly1fx7fox1rq0g309j0hhto8.jpg)
+
+首先Android5.x以上的版本都需要适配，8.x版本的需要单独设置 window 的 type 类型，8.x以下版本，还需要申请悬浮窗的权限，因为我们是将dialog作为一个悬浮窗来弹出来
+
+```
+dialog中：
+
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY - 1);
+} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+}
+```
+
+```
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+    openOverlaySettings();
+} else {
+    startService(new Intent(this, DialogService.class));
+}
+
+private void openOverlaySettings() {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        try {
+            //打开权限申请页面
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, RC_OVERLAY);
+        } catch (ActivityNotFoundException e) {
+            Log.e("TAG", "ActivityNotFoundException--->" + e.getMessage());
+        }
+    }
+}
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+        case RC_OVERLAY:
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                // 判断当前有没有授权成功
+                if (Settings.canDrawOverlays(this)) {
+                    startService(new Intent(this, DialogService.class));
+                }
+            }
+		break;
+    }
+}
+
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    stopService(new Intent(this, DialogService.class));
+}
+
+```
+
 ### 公众号
 
 欢迎关注我的个人公众号【IT先森养成记】，专注大前端技术分享，包含Android，Java基础，Kotlin，HTML，CSS，JS等技术；在这里你能得到的不止是技术上的提升，还有一些学习经验以及志同道合的朋友，赶快加入我们，一起学习，一起进化吧！！！

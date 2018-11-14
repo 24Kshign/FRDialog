@@ -190,4 +190,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, DialogService.class));
+    }
 }
