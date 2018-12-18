@@ -92,11 +92,11 @@ dialog.setAnimation(int anim)
 
 ### 2018.5.24日更新
 
-将mWidth改成mWidthOffset，不让用户设置一个具体的宽度，而是让用户去设置一个宽度比例，然后通过改变window的LayoutParams来设置dialog的宽高：
+将mWidth改成mWidthRatio，不让用户设置一个具体的宽度，而是让用户去设置一个宽度比例，然后通过改变window的LayoutParams来设置dialog的宽高：
 
 ```
 WindowManager.LayoutParams lp = window.getAttributes();
-lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthOffset);
+lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthRatio);
 lp.height = baseBuilder.mHeight;
 window.setAttributes(lp);
 ```
@@ -104,7 +104,7 @@ window.setAttributes(lp);
 用法还是和之前一样：
 
 ```
-dialog.setWidthOffset(0——1)  默认是0.9
+dialog.setWidthRatio(0——1)  默认是0.9
 ```
 
 ### 2018.7.19日更新
@@ -197,7 +197,7 @@ public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
                         holder.setText(R.id.it_tv_time, dataBean.getTime());
                     }
                 }).setDataList(mDataList)
-                .setHeightOffset(0.5)
+                .setHeightRatio(0.5)
                 .addRecyclerViewHeader(R.layout.layout_header)
                 .addDialogFooter(R.layout.layout_footer)
                 .setOnClickListener(R.id.lf_tv_cancel, view -> true)

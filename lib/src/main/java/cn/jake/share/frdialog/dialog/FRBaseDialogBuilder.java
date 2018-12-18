@@ -1,24 +1,17 @@
 package cn.jake.share.frdialog.dialog;
 
 import android.app.Service;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.IdRes;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.image.CommonImageLoader;
@@ -56,8 +49,8 @@ public class FRBaseDialogBuilder {
     private SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
     private SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
 
-    double mWidthOffset = 0.9;  //dialog宽度占屏幕宽度的比例
-    double mHeightOffset = 0;  //dialog高度占屏幕高度的比例
+    double mWidthRatio = 0.9;  //dialog宽度占屏幕宽度的比例
+    double mHeightRatio = 0;  //dialog高度占屏幕高度的比例
     int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     int mAnimation; //dialog动画
     int mGravity = Gravity.CENTER;  //dialog位置
@@ -77,13 +70,13 @@ public class FRBaseDialogBuilder {
 
     //设置dialog宽度全屏
     public FRBaseDialogBuilder setFullWidth() {
-        mWidthOffset = 1;
+        mHeightRatio = 1;
         return this;
     }
 
     //设置dialog宽度比例
-    public FRBaseDialogBuilder setWidthOffset(double widthOffset) {
-        mWidthOffset = widthOffset;
+    public FRBaseDialogBuilder setWidthRatio(double widthRatio) {
+        mWidthRatio = widthRatio;
         return this;
     }
 

@@ -119,9 +119,9 @@ public class FRDialog extends Dialog {
                 window.setWindowAnimations(baseBuilder.mAnimation);
             }
             WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthOffset);
-            if (baseBuilder.mHeightOffset != 0) {
-                lp.height = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().heightPixels * baseBuilder.mHeightOffset);
+            lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthRatio);
+            if (baseBuilder.mHeightRatio != 0) {
+                lp.height = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().heightPixels * baseBuilder.mHeightRatio);
             } else {
                 lp.height = baseBuilder.mHeight;
             }
