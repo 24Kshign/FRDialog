@@ -74,6 +74,16 @@ private void showMDDialog() {
 
 ![MD效果的dialog](http://upload-images.jianshu.io/upload_images/490111-04cd7476909d7cb6.jpg?imageMogr2/auto-orient/strip)
 
+#### 2.3、从底部弹出来的Dialog
+
+```
+FRDialog dialog = new FRDialog.CommonBuilder(this)
+  .setContentView(R.layout.dialog_from_bottom)
+  .setFullWidth()
+  .setFromBottom()
+  .show();
+```
+
 ![从底部弹出的dialog](http://upload-images.jianshu.io/upload_images/490111-70b3397b12f13aac.jpg?imageMogr2/auto-orient/strip)
 
 ### 3、特殊设置：
