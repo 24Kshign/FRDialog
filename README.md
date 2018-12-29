@@ -2,7 +2,11 @@
 
 用Builder模式重新打造一个dialog，案例中有两种Builder，分别是CommonBuilder和MDBuilder，如果还想实现其他的通用，继承自FRBaseDialogBuilder即可。
 
-### 1、下载
+[![jcenter](https://api.bintray.com/packages/cyg24kshign/maven/FRDialog/images/download.svg)](https://bintray.com/cyg24kshign/maven/FRDialog/_latestVersion)
+[![Api](https://img.shields.io/badge/Api-14%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg)
+[![Author](https://img.shields.io/badge/Author-24Kshign-blue.svg)](https://github.com/24Kshign)
+
+### 1、添加依赖
 
 Gradle：
 
@@ -12,7 +16,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.jack.frdialog:FRDialog:1.0.3'
+    //lastVersion请参照上述版本号
+    compile 'com.jack.frdialog:FRDialog:latestVersion'
 }
 ```
 
