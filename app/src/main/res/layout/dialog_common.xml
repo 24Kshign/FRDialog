@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@android:color/white"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/material_dialog_bg"
     android:orientation="vertical">
 
     <TextView
@@ -17,12 +18,18 @@
         android:textSize="18dp"
         tools:text="我是标题" />
 
-    <ImageView
-        android:id="@+id/dcu_iv_image"
-        android:layout_width="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:layout_height="100dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/dcu_iv_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/dcu_tv_content"
@@ -30,10 +37,10 @@
         android:layout_height="wrap_content"
         android:lineSpacingExtra="4dp"
         android:maxLines="4"
-        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
         android:textColor="#333333"
         android:textSize="14dp"
         tools:text="我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容" />
@@ -73,8 +80,8 @@
             android:id="@+id/dcu_view_line"
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:background="#eeeeee" />
 
         <TextView

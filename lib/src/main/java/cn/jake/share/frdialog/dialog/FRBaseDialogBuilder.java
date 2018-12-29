@@ -6,12 +6,17 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+
+import java.util.Objects;
 
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.image.CommonImageLoader;
@@ -49,12 +54,15 @@ public class FRBaseDialogBuilder {
     private SparseArray<Bitmap> mImageBitmapArray = new SparseArray<>();
     private SparseArray<CommonImageLoader> mImageCommonImageLoaderArray = new SparseArray<>();
 
-    double mWidthRatio = 0.9;  //dialog宽度占屏幕宽度的比例
-    double mHeightRatio = 0;  //dialog高度占屏幕高度的比例
-    int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
-    int mAnimation; //dialog动画
-    int mGravity = Gravity.CENTER;  //dialog位置
-    boolean isInService;
+    private double mWidthRatio = 0;  //dialog宽度占屏幕宽度的比例
+    private double mHeightRatio = 0;  //dialog高度占屏幕高度的比例
+    private int mWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int mAnimation; //dialog动画
+    private int mGravity = Gravity.CENTER;  //dialog位置
+    private boolean isInService;
+    private int mOffsetX;      //dialog在X轴的偏移量（Gravity需要设置Left）
+    private int mOffsetY;      //dialog在Y轴的偏移量（Gravity需要设置Top）
 
     FRDialogViewHelper mDialogViewHelper;
     private FRDialog mDialog;
@@ -70,6 +78,12 @@ public class FRBaseDialogBuilder {
 
     //设置dialog宽度全屏
     public FRBaseDialogBuilder setFullWidth() {
+        mWidthRatio = 1;
+        return this;
+    }
+
+    //设置dialog宽度全屏
+    public FRBaseDialogBuilder setFullHeight() {
         mHeightRatio = 1;
         return this;
     }
@@ -80,8 +94,34 @@ public class FRBaseDialogBuilder {
         return this;
     }
 
+    //设置dialog宽度比例
+    public FRBaseDialogBuilder setHeightRatio(double heightRatio) {
+        mHeightRatio = heightRatio;
+        return this;
+    }
+
     public FRBaseDialogBuilder setHeight(int height) {
         mHeight = height;
+        return this;
+    }
+
+    public FRBaseDialogBuilder setWidth(int width) {
+        mWidth = width;
+        return this;
+    }
+
+    public FRBaseDialogBuilder setGravity(int gravity) {
+        mGravity = gravity;
+        return this;
+    }
+
+    public FRBaseDialogBuilder setOffsetX(int offsetX) {
+        mOffsetX = offsetX;
+        return this;
+    }
+
+    public FRBaseDialogBuilder setOffsetY(int offsetY) {
+        mOffsetY = offsetY;
         return this;
     }
 
@@ -177,12 +217,49 @@ public class FRBaseDialogBuilder {
     }
 
     public FRDialog show() {
-        if (null != mDialog) {
-            mDialog.show();
-        } else {
-            create().show();
+        if (null == mDialog) {
+            create();
         }
+        mDialog.show();
+        setWindowStyle();
         return mDialog;
+    }
+
+    private void setWindowStyle() {
+        Window window = mDialog.getWindow();
+        if (null != window) {
+            window.setGravity(mGravity);
+            if (isInService) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY - 1);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                }
+            }
+            if (mAnimation != 0) {
+                window.setWindowAnimations(mAnimation);
+            }
+
+            WindowManager.LayoutParams lp = window.getAttributes();
+
+            if (mWidthRatio != 0) {
+                lp.width = (int) (mContext.getResources().getDisplayMetrics().widthPixels * mWidthRatio);
+            } else {
+                lp.width = mWidth;
+            }
+            if (mHeightRatio != 0) {
+                lp.height = (int) (mContext.getResources().getDisplayMetrics().heightPixels * mHeightRatio);
+            } else {
+                lp.height = mHeight;
+            }
+            if (mOffsetX > 0) {
+                lp.x = mOffsetX;
+            }
+            if (mOffsetY > 0) {
+                lp.y = mOffsetY;
+            }
+            window.setAttributes(lp);
+        }
     }
 
     protected boolean attachView() {

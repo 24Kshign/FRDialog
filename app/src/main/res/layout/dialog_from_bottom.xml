@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/dfb_tv_take_photo"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/white"
         android:gravity="center"
         android:text="拍照"
         android:textSize="18dp" />
@@ -22,7 +22,6 @@
         android:id="@+id/dfb_tv_gallery"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/white"
         android:gravity="center"
         android:text="从相册中选择"
         android:textSize="18dp" />
@@ -36,7 +35,6 @@
         android:id="@+id/dfb_tv_cancel"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/white"
         android:gravity="center"
         android:text="取消"
         android:textSize="18dp" />

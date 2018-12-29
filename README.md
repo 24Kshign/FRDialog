@@ -280,6 +280,29 @@ protected void onDestroy() {
 
 ```
 
+### 2018.12.29日更新
+
+新增dialog的偏移量，可以自定义dialog的显示位置
+
+![](https://ws1.sinaimg.cn/large/005MjwGuly1fynq0zh5x9g309i0hiq4b.jpg)
+
+```
+FRDialog dialog = new FRDialog.CommonBuilder(this, R.style.transparent_dialog)
+                .setContentView(R.layout.dialog_offsetx)
+                .setGravity(Gravity.LEFT | Gravity.TOP)
+                .setOnClickListener(R.id.do_tv_praised, view -> {
+                    Toast.makeText(DialogOffsetActivity.this, "赞", Toast.LENGTH_SHORT).show();
+                    return true;
+                })
+                .setOnClickListener(R.id.do_tv_comment, view -> {
+                    Toast.makeText(DialogOffsetActivity.this, "评论", Toast.LENGTH_SHORT).show();
+                    return true;
+                })
+                .setOffsetX(dp2px(100))
+                .setOffsetY(dp2px(51))
+                .show();
+```
+
 ### 公众号
 
 欢迎关注我的个人公众号【IT先森养成记】，专注大前端技术分享，包含Android，Java基础，Kotlin，HTML，CSS，JS等技术；在这里你能得到的不止是技术上的提升，还有一些学习经验以及志同道合的朋友，赶快加入我们，一起学习，一起进化吧！！！

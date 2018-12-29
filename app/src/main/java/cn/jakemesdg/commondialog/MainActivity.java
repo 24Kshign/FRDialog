@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.am_recyclerview_dialog).setOnClickListener(this);
         findViewById(R.id.am_start_service).setOnClickListener(this);
         findViewById(R.id.am_stop_service).setOnClickListener(this);
+        findViewById(R.id.am_offset_dialog).setOnClickListener(this);
     }
 
     @Override
@@ -68,6 +70,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.am_stop_service:
                 stopService(new Intent(this, DialogService.class));
+                break;
+            case R.id.am_offset_dialog:
+                startActivity(new Intent(this, DialogOffsetActivity.class));
                 break;
         }
     }
@@ -98,9 +103,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         holder.setText(R.id.it_tv_time, dataBean.getTime());
                     }
                 }).setDataList(mDataList)
-                .setHeightOffset(0.5)
-                .addRecyclerViewHeader(R.layout.layout_header)
                 .addDialogFooter(R.layout.layout_footer)
+                .addRecyclerViewHeader(R.layout.layout_header)
+                .setHeightRatio(0.5)
                 .setOnClickListener(R.id.lf_tv_cancel, view -> true)
                 .setOnClickListener(R.id.lf_tv_confirm, view -> {
                     Toast.makeText(MainActivity.this, "点击了确定", Toast.LENGTH_SHORT).show();
@@ -160,8 +165,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
         dialog.setOnClickListener(R.id.dcu_tv_confirm, v -> {
+            if (TextUtils.isEmpty(dialog.getContentById(R.id.dcu_et_input))) {
+                Toast.makeText(MainActivity.this, "输入框不能为空", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             Toast.makeText(MainActivity.this, dialog.getContentById(R.id.dcu_et_input), Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         });
     }
 

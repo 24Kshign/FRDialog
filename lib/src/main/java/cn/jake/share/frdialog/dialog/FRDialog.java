@@ -5,26 +5,19 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import cn.jake.share.frdialog.BuildConfig;
 import cn.jake.share.frdialog.R;
 import cn.jake.share.frdialog.image.CommonImageLoader;
 import cn.jake.share.frdialog.interfaces.FRDialogClickListener;
@@ -103,29 +96,6 @@ public class FRDialog extends Dialog {
         }
         if (null != baseBuilder.mOnKeyListener) {
             setOnKeyListener(baseBuilder.mOnKeyListener);
-        }
-
-        Window window = getWindow();
-        if (null != window) {
-            window.setGravity(baseBuilder.mGravity);
-            if (baseBuilder.isInService) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY - 1);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    Objects.requireNonNull(window).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                }
-            }
-            if (baseBuilder.mAnimation != 0) {
-                window.setWindowAnimations(baseBuilder.mAnimation);
-            }
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().widthPixels * baseBuilder.mWidthRatio);
-            if (baseBuilder.mHeightRatio != 0) {
-                lp.height = (int) (baseBuilder.mContext.getResources().getDisplayMetrics().heightPixels * baseBuilder.mHeightRatio);
-            } else {
-                lp.height = baseBuilder.mHeight;
-            }
-            window.setAttributes(lp);
         }
     }
 
@@ -267,13 +237,6 @@ public class FRDialog extends Dialog {
             mContentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_recyclerview, null);
             mViewHeaders = new ArrayList<>();
             mViewFooters = new ArrayList<>();
-        }
-
-
-        //设置dialog宽度比例
-        public RecyclerViewBuilder setHeightOffset(double heightOffset) {
-            mHeightOffset = heightOffset;
-            return this;
         }
 
         public RecyclerViewBuilder setAdapter(FRBaseDialogAdapter dialogAdapter) {

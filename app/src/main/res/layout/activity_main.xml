@@ -7,46 +7,52 @@
     <Button
         android:id="@+id/am_common_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="普通dialog" />
 
     <Button
         android:id="@+id/am_md_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="MD样式的dialog" />
 
     <Button
         android:id="@+id/am_from_bottom_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="从底部弹出的dialog" />
 
     <Button
         android:id="@+id/am_recyclerview_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="RecyclerView的dialog" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/am_start_service"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="开启Service Dialog" />
 
         <Button
             android:id="@+id/am_stop_service"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="关闭Service Dialog" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/am_offset_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Offset的dialog" />
 
 </LinearLayout>

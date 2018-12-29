@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>  <!-- 是否有边框 -->
+        <item name="android:windowIsFloating">true</item>  <!-- 是否浮在Activity上 -->
+        <item name="android:windowNoTitle">true</item>    <!-- 是否浮显示标题 -->
+        <item name="android:windowIsTranslucent">false</item>    <!-- 是否半透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>  <!-- 是否模糊显示 -->
+    </style>
+
 </resources>
