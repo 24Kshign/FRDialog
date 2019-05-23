@@ -6,6 +6,10 @@
 [![Api](https://img.shields.io/badge/Api-14%2B-green.svg)](https://img.shields.io/badge/Api-14%2B-green.svg)
 [![Author](https://img.shields.io/badge/Author-24Kshign-blue.svg)](https://github.com/24Kshign)
 
+### 注意
+
+从2019.05.23日开始，该库升级为支持androidx，如果你的项目还没有升级支持的话，那么只能使用1.0.6之前的版本。
+
 ### 1、添加依赖
 
 Gradle：
@@ -307,6 +311,10 @@ FRDialog dialog = new FRDialog.CommonBuilder(this, R.style.transparent_dialog)
                 .setOffsetY(dp2px(51))
                 .show();
 ```
+
+### 2019.05.23日更新
+
+此次更新主要是升级到androidx，然后将内部使用的三方库（support包和recyclerview包）设置成implemention，外部不可访问，用法不变
 
 ### 公众号
 
