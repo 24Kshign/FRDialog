@@ -1,6 +1,6 @@
 package cn.jake.share.frdialog.util;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.EditText;
 
 /**

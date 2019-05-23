@@ -3,7 +3,7 @@ package cn.jake.share.frdialog.dialog;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;

@@ -3,7 +3,7 @@ package cn.jakemesdg.commondialog.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
