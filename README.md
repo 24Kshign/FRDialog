@@ -4,7 +4,7 @@
 
 [![jcenter](https://api.bintray.com/packages/cyg24kshign/maven/FRDialog/images/download.svg)](https://bintray.com/cyg24kshign/maven/FRDialog/_latestVersion)
 [![Author](https://img.shields.io/badge/Author-24Kshign-blue.svg)](https://github.com/24Kshign)
-[![Api](https://img.shields.io/badge/Api-15%2B-green.svg)](https://img.shields.io/badge/Api-15%2B-green.svg)
+[![Api](https://img.shields.io/static/v1.svg?label=Api&message=15%2B&color=green)](https://img.shields.io/static/v1.svg?label=Api&message=15%2B&color=green)
 
 ### 注意
 
