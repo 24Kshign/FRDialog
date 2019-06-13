@@ -177,7 +177,7 @@ public static boolean isAutoHideSoftInput(View view, MotionEvent event) {
 
 新增recyclerview样式的dialogBuilder
 
-![](http://ooaap25kv.bkt.clouddn.com/18-9-11/67216384.jpg)
+![](https://upload-images.jianshu.io/upload_images/490111-7c6e8cd99c686ec1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp)
 
 具体功能有：
 
